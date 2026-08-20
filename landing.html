@@ -490,7 +490,7 @@
     display: grid;
     grid-template-columns: 1.25fr 1fr;
     gap: 28px;
-    max-width: 860px;
+    max-width: 880px;
     margin: 0 auto;
   }
   .price-card {
@@ -521,6 +521,7 @@
     border-radius: 20px;
     text-transform: uppercase;
     letter-spacing: .6px;
+    white-space: nowrap;
   }
   .price-header h3 { font-size: 21px; font-weight: 800; color: var(--primary); }
   .price-header .price-amount {
@@ -529,6 +530,9 @@
     color: var(--accent-dark);
     margin: 12px 0 4px;
     letter-spacing: -1px;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
   }
   .price-header .price-amount small {
     font-size: 15px;
@@ -641,7 +645,7 @@
           <a class="btn ghost big" href="/preview/funnel">Tester le parcours prospect (Démo)</a>
         </div>
         <div id="hero-reassure" class="reassure" style="display:none">
-          🔒 3 jours d'essai gratuit, puis 14,90 €/mois · sans engagement · données en Europe
+          🔒 3 jours d'essai gratuit, puis 29 €/mois (au lieu de 49 €/mois jusqu'au 30 sept. 2026) · sans engagement · données en Europe
         </div>
       </div>
 
@@ -804,17 +808,21 @@
 
     <div class="pricing-grid">
       <div class="price-card featured">
-        <span class="rec-badge">Offre Conseiller / Mandataire</span>
+        <span class="rec-badge">🔥 Offre de Lancement — jusqu'au 30 sept. 2026</span>
         <div class="price-header">
           <h3>MandIMMO Solo</h3>
-          <div class="price-amount">14,90 €<small> / mois</small></div>
-          <div id="price-trial-badge" style="font-size:13px;color:var(--accent-dark);font-weight:bold;display:none">3 jours d'essai gratuit</div>
+          <div class="price-amount">
+            29 €<small> / mois</small>
+            <span style="font-size:18px;text-decoration:line-through;color:#94A3B8;font-weight:600">49 €</span>
+          </div>
+          <div id="price-trial-badge" style="font-size:13px;color:var(--accent-dark);font-weight:bold;display:none">3 jours d'essai gratuit · Tarif bloqué pour les premiers inscrits</div>
         </div>
         <ul class="price-features">
-          <li id="price-trial-li" style="display:none">3 jours gratuits, puis 14,90 €/mois</li>
+          <li id="price-trial-li" style="display:none">3 jours gratuits, puis 29 €/mois (au lieu de 49 €)</li>
+          <li>🎁 <b>Kit de prospection clé en main inclus</b> (Modèles Flyers Canva + Textes de posts & pubs prêts à l'emploi)</li>
           <li><b>Leads exclusifs</b> (aucun partage avec d'autres agents)</li>
-          <li><b>Entonnoir d'estimation personnalisé</b> à votre nom et agence</li>
-          <li><b>QR Code Haute Définition</b> prêt à imprimer pour vos flyers</li>
+          <li><b>Entonnoir d'estimation personnalisé</b> à votre nom, photo et agence</li>
+          <li><b>QR Code Haute Définition</b> prêt à imprimer pour vos flyers et panneaux</li>
           <li><b>Registre de consentement exportable</b> en 1 clic (format CSV)</li>
           <li><b>Alertes instantanées</b> par email dès qu'un lead confirme</li>
           <li><b>Scoring indicatif</b> des signaux de vente de votre secteur</li>
@@ -832,7 +840,7 @@
         <ul class="price-features">
           <li>Déploiement multi-comptes avec tableau de bord superviseur</li>
           <li>Formation MandIMMO d'une demi-journée pour vos conseillers</li>
-          <li>Intégration et accompagnement sur-mesure</li>
+          <li>Accompagnement et modèles personnalisés au réseau</li>
           <li>Tarifs dégressifs selon le volume de conseillers</li>
         </ul>
         <a class="btn ghost big" href="mailto:contact@vsimplifai.eu?subject=Demande%20Devis%20R%C3%A9seau%20MandIMMO">Demander un devis réseau</a>
@@ -852,6 +860,11 @@
 
     <div class="faq-grid">
       <div class="faq-card">
+        <h3>Je ne sais pas faire de publicité sur Facebook/Instagram, est-ce que ça va marcher ?</h3>
+        <p><b>Oui, absolument !</b> La majorité des mandataires obtiennent leurs meilleurs résultats <b>sur le terrain</b> : en imprimant leur QR code sur des flyers de quartier ou des panneaux « Vendu » grâce aux modèles Canva prêts à l'emploi inclus dans votre abonnement. Aucune pub payante n'est obligatoire.</p>
+      </div>
+
+      <div class="faq-card">
         <h3>D'où viennent les prospects ? Est-ce que MandIMMO fournit des listes ?</h3>
         <p>MandIMMO ne vend pas de fichiers froids. C'est votre <b>machine de capture et de conversion locale</b> : vous partagez votre lien et QR code sur vos flyers, réseaux et annonces. Chaque propriétaire qui clique ou scanne devient votre contact direct.</p>
       </div>
@@ -869,11 +882,6 @@
       <div class="faq-card">
         <h3>Comment MandIMMO m'aide face aux obligations légales (Bloctel / RGPD) ?</h3>
         <p>Chaque formulaire intègre les mentions d'information obligatoires et un mécanisme de double opt-in avec horodatage certifié. En cas de contrôle ou de contestation, vous pouvez exporter votre registre de consentements attestant de la démarche volontaire du prospect.</p>
-      </div>
-
-      <div class="faq-card">
-        <h3>Comment suis-je prévenu lorsqu'un propriétaire valide son accord ?</h3>
-        <p>Vous recevez instantanément une notification par email contenant les coordonnées du prospect et les caractéristiques de son bien immobilier, vous permettant de le rappeler rapidement.</p>
       </div>
 
       <div class="faq-card">

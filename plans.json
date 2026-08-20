@@ -1,18 +1,20 @@
 [
   {
     "id": "solo",
-    "name": "MandIMMO",
-    "price": "14,90 €",
-    "unit": "/ mois",
-    "audience": "Conseiller immobilier indépendant",
+    "name": "MandIMMO Solo",
+    "price": "29 €",
+    "unit": "/ mois (Tarif Fondateur)",
+    "audience": "Offre spéciale jusqu'au 30 sept. 2026 (puis 49 €/mois)",
     "features": [
-      "Page de capture illimitée",
-      "Tunnel de consentement (double opt-in)",
-      "Registre de preuves exportable (RGPD)",
-      "Leads consentis, prêts à appeler",
+      "🎁 Kit de prospection inclus (modèles flyers & réseaux)",
+      "Page de capture et entonnoir d'estimation personnalisés",
+      "QR Code Haute Définition pour flyers et panneaux",
+      "Tunnel de consentement préalable (double opt-in)",
+      "Registre de preuves horodaté exportable (format CSV)",
+      "Leads exclusifs, prêts à appeler en direct",
       "Sans engagement, résiliable à tout moment"
     ],
-    "cta": "Commencer",
+    "cta": "Commencer mon essai",
     "highlight": true
   },
   {
