@@ -1,0 +1,5 @@
+schema_name,table_name,rls_enabled,rls_forced
+public,agents,true,false
+public,leads,true,false
+public,properties,true,false
+public,visits,true,false

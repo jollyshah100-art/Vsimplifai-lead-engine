@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MandIMMO — Compte</title>
+<style>
+  :root{--navy:#1F4E79;--green:#2E8B57;--grey:#5f6b76;--line:#e3e8ee}
+  body{margin:0;background:#f4f6f9;font-family:Arial,Helvetica,sans-serif;color:#1d2733}
+  .wrap{max-width:430px;margin:48px auto;background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px}
+  h1{font-size:22px;color:var(--navy);margin:0 0 4px}
+  .sub{color:var(--grey);font-size:13px;margin-bottom:18px}
+  .tabs{display:flex;gap:8px;margin-bottom:16px}
+  .tabs button{all:unset;cursor:pointer;padding:8px 14px;border-radius:8px;font-size:14px;color:var(--navy);border:1px solid var(--line)}
+  .tabs button.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+  label{font-size:12px;color:var(--grey);display:block;margin:10px 0 4px}
+  input,select{width:100%;padding:10px 11px;border:1px solid var(--line);border-radius:8px;font-size:14px}
+  .btn{all:unset;cursor:pointer;background:var(--green);color:#fff;font-weight:bold;font-size:14px;padding:11px 16px;border-radius:9px;display:block;text-align:center;margin-top:16px}
+  .msg{font-size:13px;margin-top:12px}
+  .ok{color:var(--green)}.err{color:#b3261e}
+  .form{display:none}.form.active{display:block}
+  a{color:var(--navy)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>MandIMMO</h1>
+  <div class="sub">Votre compte agent.</div>
+  <div class="tabs">
+    <button id="tab-signup" class="active" onclick="tab('signup')">Créer un compte</button>
+    <button id="tab-login" onclick="tab('login')">Se connecter</button>
+  </div>
+
+  <form class="form active" id="form-signup" onsubmit="return signup(event)">
+    <label>Email</label><input id="su-email" type="email" required>
+    <label>Mot de passe</label><input id="su-pw" type="password" required minlength="6">
+    <div id="planBlock"><label>Formule</label>
+    <select id="su-plan">
+      <option value="solo">MandIMMO — 14,90 € / mois (sans engagement)</option>
+    </select></div>
+    <button class="btn" type="submit" id="su-btn">Créer mon compte</button>
+    <div class="msg" id="su-free" style="display:none;color:#2c6b45"></div>
+    <div class="msg" id="su-msg"></div>
+  </form>
+
+  <form class="form" id="form-login" onsubmit="return login(event)">
+    <label>Email</label><input id="li-email" type="email" required>
+    <label>Mot de passe</label><input id="li-pw" type="password" required>
+    <button class="btn" type="submit">Se connecter</button>
+    <div class="msg" id="li-msg"></div>
+    <div style="margin-top:12px;text-align:center"><a href="#" onclick="showForgot();return false;" style="font-size:12.5px;color:#2E75B6">Mot de passe oublié ?</a></div>
+  </form>
+
+  <form class="form" id="form-forgot" onsubmit="return forgot(event)">
+    <div class="sub" style="margin-bottom:6px">Entrez votre email : nous vous enverrons un lien pour choisir un nouveau mot de passe.</div>
+    <label>Email</label><input id="fg-email" type="email" required>
+    <button class="btn" type="submit">Envoyer le lien</button>
+    <div class="msg" id="fg-msg"></div>
+    <div style="margin-top:12px;text-align:center"><a href="#" onclick="tab('login');return false;" style="font-size:12.5px;color:#5f6b76">&larr; Retour à la connexion</a></div>
+  </form>
+
+  <div class="msg" id="status"></div>
+</div>
+<script>
+  const qp = new URLSearchParams(location.search);
+  if (qp.get('plan')) { document.getElementById('su-plan').value = qp.get('plan'); }
+  if (qp.get('welcome')) { document.getElementById('status').innerHTML = '<span class="ok">'+((qp.get('simulated')||qp.get('comp'))?'Compte créé ! Connectez-vous pour accéder à l\'appli.':'Essai gratuit activé ! Connectez-vous pour accéder à l\'appli.')+'</span>'; tab('login'); }
+  if (qp.get('canceled')) { document.getElementById('status').innerHTML = '<span class="err">Paiement annulé. Votre compte n\'est pas activé.</span>'; }
+  if (qp.get('pay')) { document.getElementById('status').innerHTML = '<span class="err">Votre abonnement n\'est pas finalisé. Terminez le paiement pour accéder à l\'appli.</span>'; tab('login'); }
+  var invite = qp.get('invite');
+  fetch('/api/config').then(r=>r.json()).then(c=>{ var b=!!c.billing && !invite; document.getElementById('su-btn').textContent=b?'Démarrer l\'essai gratuit (14 jours)':'Créer mon compte (gratuit)'; var f=document.getElementById('su-free'); if(b){ f.style.display='block'; f.textContent='14 jours gratuits, puis 14,90 €/mois. Sans engagement.'; } else { document.getElementById('planBlock').style.display='none'; f.style.display='block'; f.textContent= invite ? 'Accès offert — aucune carte bancaire requise.' : 'Offre de lancement : accès gratuit, sans carte bancaire.'; } }).catch(function(){});
+
+  function tab(t){
+    document.getElementById('tab-signup').classList.toggle('active', t==='signup');
+    document.getElementById('tab-login').classList.toggle('active', t==='login');
+    document.getElementById('form-signup').classList.toggle('active', t==='signup');
+    document.getElementById('form-login').classList.toggle('active', t==='login');
+    document.getElementById('form-forgot').classList.remove('active');
+  }
+  function showForgot(){
+    document.getElementById('form-signup').classList.remove('active');
+    document.getElementById('form-login').classList.remove('active');
+    document.getElementById('form-forgot').classList.add('active');
+  }
+  async function forgot(e){
+    e.preventDefault();
+    const email = document.getElementById('fg-email').value.trim();
+    document.getElementById('fg-msg').innerHTML = '<span style="color:#5f6b76">Envoi…</span>';
+    try {
+      const r = await fetch('/api/forgot',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
+      const d = await r.json();
+      document.getElementById('fg-msg').innerHTML = '<span class="ok">'+(d.message||'Si un compte existe, un email a été envoyé.')+'</span>';
+    } catch(err){ document.getElementById('fg-msg').innerHTML = '<span class="err">Erreur, réessayez.</span>'; }
+    return false;
+  }
+  async function signup(e){
+    e.preventDefault();
+    const email = document.getElementById('su-email').value.trim();
+    const password = document.getElementById('su-pw').value;
+    const plan = document.getElementById('su-plan').value;
+    document.getElementById('su-msg').innerHTML = '<span style="color:#5f6b76">Un instant…</span>';
+    try {
+      const r = await fetch('/api/signup',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({email,password,plan})});
+      const d = await r.json();
+      if(d.ok && d.url){ location.href = d.url; return false; }
+      document.getElementById('su-msg').innerHTML = '<span class="err">'+(d.error||'Une erreur est survenue.')+'</span>';
+    } catch(err){ document.getElementById('su-msg').innerHTML = '<span class="err">Connexion impossible, réessayez.</span>'; }
+    return false;
+  }
+  async function login(e){
+    e.preventDefault();
+    const email = document.getElementById('li-email').value.trim();
+    const password = document.getElementById('li-pw').value;
+    const r = await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email,password})});
+    const d = await r.json();
+    if(d.ok){ document.getElementById('li-msg').innerHTML = '<span class="ok">Connecté ('+d.status+'). <a href="/">Ouvrir l\'appli &rarr;</a></span>'; return false; }
+    document.getElementById('li-msg').innerHTML = '<span class="err">'+(d.error||'identifiants invalides')+'</span>';
+    return false;
+  }
+</script>
+</body>
+</html>

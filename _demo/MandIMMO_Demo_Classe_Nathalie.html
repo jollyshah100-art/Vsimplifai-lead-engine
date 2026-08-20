@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MandIMMO — Démo pédagogique</title>
+  <meta name="description" content="Démonstration pédagogique locale du parcours MandIMMO avec données fictives.">
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    :root{
+      --navy:#14233c;
+      --navy2:#22395e;
+      --stone:#f4eddf;
+      --paper:#fffdf8;
+      --gold:#c8a24b;
+      --wine:#7c2a46;
+      --green:#2d7450;
+      --green-bg:#eaf5ef;
+      --red:#a33a3a;
+      --red-bg:#faeded;
+      --ink:#1f2732;
+      --muted:#667080;
+      --line:#ded7ca;
+      --shadow:0 16px 40px rgba(20,35,60,.12);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+      color:var(--ink);
+      background:var(--stone);
+      line-height:1.55;
+    }
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    .top-alert{
+      background:var(--wine);
+      color:#fff;
+      padding:9px 18px;
+      text-align:center;
+      font-size:13px;
+      font-weight:700;
+      letter-spacing:.02em;
+    }
+    header{
+      background:rgba(244,237,223,.94);
+      border-bottom:1px solid var(--line);
+      position:sticky;
+      top:0;
+      z-index:10;
+      backdrop-filter:blur(12px);
+    }
+    .header-inner{
+      max-width:1120px;
+      margin:auto;
+      padding:14px 24px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand-mark{
+      width:14px;height:14px;border-radius:50%;
+      background:var(--gold);
+      box-shadow:0 0 0 6px rgba(200,162,75,.18);
+    }
+    .brand strong{
+      display:block;
+      font-family:Georgia,serif;
+      color:var(--navy);
+      font-size:22px;
+    }
+    .brand small{display:block;color:var(--muted);font-size:12px}
+    .reset{
+      border:1px solid var(--navy);
+      background:transparent;
+      color:var(--navy);
+      border-radius:9px;
+      padding:9px 14px;
+      font-weight:700;
+    }
+    main{max-width:1120px;margin:auto;padding:34px 24px 70px}
+    .hero{
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:30px;
+      align-items:center;
+      background:var(--navy);
+      color:#fff;
+      padding:42px;
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .hero:after{
+      content:"";
+      position:absolute;
+      width:330px;height:330px;border-radius:50%;
+      right:-120px;top:-150px;
+      background:rgba(200,162,75,.14);
+    }
+    .eyebrow{
+      display:inline-block;
+      text-transform:uppercase;
+      letter-spacing:.13em;
+      font-size:11px;
+      font-weight:800;
+      color:#efd890;
+      margin-bottom:12px;
+    }
+    h1{
+      font-family:Georgia,serif;
+      font-size:clamp(32px,5vw,52px);
+      line-height:1.04;
+      margin:0 0 18px;
+      letter-spacing:-.035em;
+    }
+    .hero p{color:rgba(255,255,255,.78);font-size:17px;max-width:650px}
+    .hero-note{
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:16px;
+      padding:20px;
+      background:rgba(255,255,255,.06);
+      position:relative;z-index:1;
+    }
+    .hero-note b{display:block;color:#fff;margin-bottom:8px}
+    .hero-note ul{padding-left:20px;margin:10px 0 0;color:rgba(255,255,255,.75);font-size:14px}
+    .section-title{
+      font-family:Georgia,serif;
+      color:var(--navy);
+      font-size:30px;
+      margin:54px 0 8px;
+    }
+    .section-intro{color:var(--muted);margin:0 0 22px;max-width:780px}
+    .flow{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:18px;
+      margin-top:22px;
+    }
+    .step{
+      background:var(--paper);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:22px;
+      position:relative;
+      box-shadow:0 5px 18px rgba(20,35,60,.05);
+    }
+    .step-num{
+      width:36px;height:36px;border-radius:50%;
+      display:grid;place-items:center;
+      background:var(--navy);color:#fff;font-weight:800;
+      margin-bottom:14px;
+    }
+    .step h3{margin:0 0 8px;color:var(--navy)}
+    .step p{margin:0;color:var(--muted);font-size:14px}
+    .demo-grid{
+      display:grid;
+      grid-template-columns:.92fr 1.08fr;
+      gap:22px;
+      align-items:start;
+    }
+    .panel{
+      background:var(--paper);
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:24px;
+      box-shadow:0 6px 22px rgba(20,35,60,.06);
+    }
+    .panel h3{
+      margin:0 0 6px;
+      color:var(--navy);
+      font-size:21px;
+    }
+    .panel .sub{color:var(--muted);font-size:14px;margin:0 0 20px}
+    label{display:block;font-size:13px;font-weight:700;color:var(--navy);margin:15px 0 6px}
+    input,select{
+      width:100%;
+      border:1px solid #cfc7b9;
+      border-radius:10px;
+      padding:11px 12px;
+      background:#fff;
+      color:var(--ink);
+    }
+    .check{
+      display:flex;align-items:flex-start;gap:9px;
+      margin:16px 0;
+      padding:12px;
+      background:#f8f3ea;
+      border-radius:10px;
+      font-size:13px;
+      color:#4e5866;
+    }
+    .check input{width:auto;margin-top:3px}
+    .primary{
+      width:100%;
+      border:0;
+      border-radius:10px;
+      padding:12px 16px;
+      background:var(--wine);
+      color:#fff;
+      font-weight:800;
+    }
+    .primary:disabled{opacity:.45;cursor:not-allowed}
+    .secondary{
+      border:1px solid var(--navy);
+      border-radius:9px;
+      padding:9px 13px;
+      background:#fff;
+      color:var(--navy);
+      font-weight:700;
+    }
+    .message{
+      display:none;
+      margin-top:15px;
+      border-radius:10px;
+      padding:13px;
+      background:var(--green-bg);
+      color:var(--green);
+      border:1px solid #bcdac9;
+      font-size:14px;
+    }
+    .confirm-box{
+      display:none;
+      margin-top:18px;
+      padding:18px;
+      border:1px dashed var(--gold);
+      border-radius:14px;
+      background:#fffaf0;
+    }
+    .confirm-box p{font-size:13px;color:var(--muted)}
+    .dashboard-head{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:17px;
+    }
+    .workspace-select{max-width:260px}
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+      margin-bottom:17px;
+    }
+    .stat{
+      background:#f7f2e8;
+      border-radius:12px;
+      padding:12px;
+    }
+    .stat span{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.07em}
+    .stat b{font-size:23px;color:var(--navy)}
+    .lead-card{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:15px;
+      margin-top:10px;
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:12px;
+      align-items:center;
+    }
+    .lead-card h4{margin:0 0 3px;color:var(--navy)}
+    .lead-meta{font-size:12px;color:var(--muted)}
+    .badge{
+      display:inline-block;
+      border-radius:30px;
+      padding:5px 9px;
+      font-size:11px;
+      font-weight:800;
+    }
+    .confirmed{background:var(--green-bg);color:var(--green)}
+    .pending{background:#fff3d6;color:#80621e}
+    .withdrawn{background:var(--red-bg);color:var(--red)}
+    .empty{
+      padding:28px 14px;
+      text-align:center;
+      color:var(--muted);
+      border:1px dashed var(--line);
+      border-radius:14px;
+    }
+    .teaching{
+      background:#fff;
+      border-left:5px solid var(--gold);
+      border-radius:0 16px 16px 0;
+      padding:22px 24px;
+      margin-top:30px;
+    }
+    .teaching h3{margin:0 0 10px;color:var(--navy)}
+    .teaching ol{margin:0;padding-left:22px}
+    .teaching li{margin:7px 0}
+    .safe{
+      margin-top:32px;
+      background:var(--green-bg);
+      border:1px solid #bedbc9;
+      color:#285f44;
+      padding:18px;
+      border-radius:14px;
+      font-size:14px;
+    }
+    footer{
+      text-align:center;color:var(--muted);
+      font-size:12px;margin-top:45px;
+    }
+    @media(max-width:850px){
+      .hero,.demo-grid{grid-template-columns:1fr}
+      .flow{grid-template-columns:1fr}
+    }
+    @media(max-width:560px){
+      .hero{padding:28px 22px}
+      .header-inner{align-items:flex-start}
+      .stats{grid-template-columns:1fr}
+      .lead-card{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="top-alert">DÉMO PÉDAGOGIQUE — données entièrement fictives — aucun email, appel, paiement ou enregistrement réel</div>
+
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <div>
+          <strong>MandIMMO</strong>
+          <small>Simulation locale pour la formation de Nathalie</small>
+        </div>
+      </div>
+      <button class="reset" id="resetDemo" type="button">Recommencer la démo</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <span class="eyebrow">Exemple de système commercial assisté par l’IA</span>
+        <h1>Transformer un intérêt immobilier en suivi structuré.</h1>
+        <p>
+          Cette démonstration montre le parcours conceptuel : un propriétaire demande une estimation,
+          confirme son intérêt, puis apparaît uniquement dans l’espace de l’agence concernée.
+        </p>
+      </div>
+      <aside class="hero-note">
+        <b>Ce que cette démo ne fait pas</b>
+        <ul>
+          <li>aucune collecte de données réelle ;</li>
+          <li>aucune connexion à Supabase, Stripe ou Render ;</li>
+          <li>aucun envoi d’email ou de SMS ;</li>
+          <li>aucune affirmation de conformité juridique.</li>
+        </ul>
+      </aside>
+    </section>
+
+    <h2 class="section-title">Le parcours en trois étapes</h2>
+    <p class="section-intro">Présentez d’abord le principe, puis utilisez la simulation interactive ci-dessous.</p>
+
+    <div class="flow">
+      <article class="step">
+        <div class="step-num">1</div>
+        <h3>Le propriétaire manifeste un intérêt</h3>
+        <p>Il demande une estimation ou une information utile. Il ne reçoit aucune pression commerciale dans cette simulation.</p>
+      </article>
+      <article class="step">
+        <div class="step-num">2</div>
+        <h3>Il confirme son choix</h3>
+        <p>La confirmation simulée illustre le besoin d’un acte positif et d’une preuve rattachée au bon destinataire.</p>
+      </article>
+      <article class="step">
+        <div class="step-num">3</div>
+        <h3>L’agence voit seulement ses contacts</h3>
+        <p>Le sélecteur d’espace montre que les données de l’Agence Atlantique ne sont pas visibles par l’Agence Bastide.</p>
+      </article>
+    </div>
+
+    <h2 class="section-title">Simulation interactive</h2>
+    <p class="section-intro">Utilisez uniquement les données fictives déjà préremplies.</p>
+
+    <div class="demo-grid">
+      <section class="panel" aria-labelledby="captureTitle">
+        <h3 id="captureTitle">1. Demande d’estimation</h3>
+        <p class="sub">Formulaire purement local : le bouton ne transmet rien sur Internet.</p>
+
+        <label for="agency">Agence destinataire</label>
+        <select id="agency">
+          <option value="atlantique">Agence Atlantique — Bordeaux</option>
+          <option value="bastide">Agence Bastide — Bordeaux Rive Droite</option>
+        </select>
+
+        <label for="ownerName">Nom fictif</label>
+        <input id="ownerName" value="Camille Démonstration" autocomplete="off">
+
+        <label for="property">Projet immobilier fictif</label>
+        <select id="property">
+          <option>Estimation d’un appartement</option>
+          <option>Estimation d’une maison</option>
+          <option>Question sur un projet de vente</option>
+        </select>
+
+        <div class="check">
+          <input id="interestCheck" type="checkbox">
+          <label for="interestCheck" style="margin:0;font-weight:500">
+            Je demande à être recontacté(e) par l’agence sélectionnée dans le cadre de cette démonstration fictive.
+          </label>
+        </div>
+
+        <button class="primary" id="submitInterest" type="button" disabled>Créer la demande fictive</button>
+
+        <div class="message" id="createdMessage" aria-live="polite">
+          Demande fictive créée. Elle reste en attente tant que la confirmation simulée n’a pas été effectuée.
+        </div>
+
+        <div class="confirm-box" id="confirmBox">
+          <strong>2. Confirmation simulée</strong>
+          <p>
+            Dans un produit réel, cette action devrait appartenir au propriétaire et produire une preuve
+            rattachée au bon destinataire. Ici, elle ne fait que modifier l’écran local.
+          </p>
+          <button class="secondary" id="confirmInterest" type="button">Simuler la confirmation du propriétaire</button>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="dashboardTitle">
+        <div class="dashboard-head">
+          <div>
+            <h3 id="dashboardTitle">3. Espace agent simulé</h3>
+            <p class="sub" style="margin-bottom:0">Changez d’agence pour montrer l’isolation attendue.</p>
+          </div>
+          <div class="workspace-select">
+            <label for="workspace" style="margin-top:0">Espace affiché</label>
+            <select id="workspace">
+              <option value="atlantique">Agence Atlantique</option>
+              <option value="bastide">Agence Bastide</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="stats">
+          <div class="stat"><span>Total</span><b id="totalCount">0</b></div>
+          <div class="stat"><span>Confirmés</span><b id="confirmedCount">0</b></div>
+          <div class="stat"><span>En attente</span><b id="pendingCount">0</b></div>
+        </div>
+
+        <div id="leadList" aria-live="polite"></div>
+      </section>
+    </div>
+
+    <aside class="teaching">
+      <h3>Ce que vous pouvez dire à Nathalie</h3>
+      <ol>
+        <li>« Ceci est une maquette pédagogique, pas un outil commercial en production. »</li>
+        <li>« L’IA peut aider à structurer un parcours, mais les règles d’accès aux données doivent être conçues avant le lancement. »</li>
+        <li>« Chaque agence doit disposer de son propre espace et ne voir que les contacts qui lui sont destinés. »</li>
+        <li>« Le consentement réel ne doit jamais être simulé ou validé par l’agent lui-même. »</li>
+        <li>« La technologie vient après la définition du processus, des responsabilités et des contrôles. »</li>
+      </ol>
+    </aside>
+
+    <div class="safe">
+      <strong>Message pédagogique central :</strong>
+      un prototype peut être excellent pour expliquer une idée, mais il ne devient un produit réel qu’après
+      la sécurisation des données, la validation du parcours de consentement et les tests entre plusieurs comptes.
+    </div>
+
+    <footer>
+      MandIMMO — démonstration pédagogique locale préparée pour la formation · Données fictives uniquement
+    </footer>
+  </main>
+
+  <script>
+    const baseLeads = [
+      {
+        id: "A-001",
+        workspace: "atlantique",
+        name: "Sophie Exemple",
+        project: "Estimation d’une maison",
+        status: "confirmed",
+        date: "28 juillet 2026"
+      },
+      {
+        id: "A-002",
+        workspace: "atlantique",
+        name: "Marc Démonstration",
+        project: "Question sur un projet de vente",
+        status: "pending",
+        date: "28 juillet 2026"
+      },
+      {
+        id: "B-001",
+        workspace: "bastide",
+        name: "Lina Exemple",
+        project: "Estimation d’un appartement",
+        status: "confirmed",
+        date: "27 juillet 2026"
+      }
+    ];
+
+    let leads = baseLeads.map(item => ({...item}));
+    let newLeadId = null;
+
+    const agency = document.getElementById("agency");
+    const ownerName = document.getElementById("ownerName");
+    const property = document.getElementById("property");
+    const interestCheck = document.getElementById("interestCheck");
+    const submitInterest = document.getElementById("submitInterest");
+    const createdMessage = document.getElementById("createdMessage");
+    const confirmBox = document.getElementById("confirmBox");
+    const confirmInterest = document.getElementById("confirmInterest");
+    const workspace = document.getElementById("workspace");
+    const leadList = document.getElementById("leadList");
+    const totalCount = document.getElementById("totalCount");
+    const confirmedCount = document.getElementById("confirmedCount");
+    const pendingCount = document.getElementById("pendingCount");
+    const resetDemo = document.getElementById("resetDemo");
+
+    function statusLabel(status){
+      if(status === "confirmed") return ["Confirmé", "confirmed"];
+      if(status === "withdrawn") return ["Retiré", "withdrawn"];
+      return ["En attente", "pending"];
+    }
+
+    function renderDashboard(){
+      const visible = leads.filter(lead => lead.workspace === workspace.value);
+      totalCount.textContent = visible.length;
+      confirmedCount.textContent = visible.filter(lead => lead.status === "confirmed").length;
+      pendingCount.textContent = visible.filter(lead => lead.status === "pending").length;
+
+      if(!visible.length){
+        leadList.innerHTML = '<div class="empty">Aucun contact fictif dans cet espace.</div>';
+        return;
+      }
+
+      leadList.innerHTML = visible.map(lead => {
+        const [label, cls] = statusLabel(lead.status);
+        return `
+          <article class="lead-card">
+            <div>
+              <h4>${escapeHtml(lead.name)}</h4>
+              <div class="lead-meta">${escapeHtml(lead.project)} · ${escapeHtml(lead.date)} · Réf. ${escapeHtml(lead.id)}</div>
+            </div>
+            <span class="badge ${cls}">${label}</span>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function escapeHtml(value){
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    interestCheck.addEventListener("change", () => {
+      submitInterest.disabled = !interestCheck.checked;
+    });
+
+    submitInterest.addEventListener("click", () => {
+      const prefix = agency.value === "atlantique" ? "A" : "B";
+      newLeadId = `${prefix}-DEMO-${Date.now()}`;
+      leads.push({
+        id: newLeadId,
+        workspace: agency.value,
+        name: ownerName.value.trim() || "Propriétaire fictif",
+        project: property.value,
+        status: "pending",
+        date: "Démo en cours"
+      });
+
+      workspace.value = agency.value;
+      createdMessage.style.display = "block";
+      confirmBox.style.display = "block";
+      submitInterest.disabled = true;
+      interestCheck.disabled = true;
+      renderDashboard();
+    });
+
+    confirmInterest.addEventListener("click", () => {
+      const lead = leads.find(item => item.id === newLeadId);
+      if(lead) lead.status = "confirmed";
+      confirmInterest.textContent = "Confirmation simulée effectuée";
+      confirmInterest.disabled = true;
+      renderDashboard();
+    });
+
+    workspace.addEventListener("change", renderDashboard);
+
+    resetDemo.addEventListener("click", () => {
+      leads = baseLeads.map(item => ({...item}));
+      newLeadId = null;
+      agency.value = "atlantique";
+      workspace.value = "atlantique";
+      ownerName.value = "Camille Démonstration";
+      property.selectedIndex = 0;
+      interestCheck.checked = false;
+      interestCheck.disabled = false;
+      submitInterest.disabled = true;
+      createdMessage.style.display = "none";
+      confirmBox.style.display = "none";
+      confirmInterest.disabled = false;
+      confirmInterest.textContent = "Simuler la confirmation du propriétaire";
+      renderDashboard();
+      window.scrollTo({top:0,behavior:"smooth"});
+    });
+
+    renderDashboard();
+  </script>
+</body>
+</html>

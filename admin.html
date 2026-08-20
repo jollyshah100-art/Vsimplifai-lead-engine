@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MandIMMO — Tableau de bord</title>
+<style>
+  :root{--navy:#1F4E79;--blue:#2E75B6;--green:#2E8B57;--lightg:#E2F0E6;--light:#EAF2FA;--grey:#5f6b76;--line:#e3e8ee}
+  *{box-sizing:border-box}
+  body{margin:0;background:#f4f6f9;font-family:Arial,Helvetica,sans-serif;color:#1d2733}
+  .wrap{max-width:980px;margin:0 auto;padding:22px 20px 50px}
+  .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+  h1{font-size:22px;color:var(--navy);margin:0}
+  .muted{color:var(--grey);font-size:13px}
+  a.back{font-size:13px;color:var(--blue);text-decoration:none}
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:20px 0 26px}
+  .stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px}
+  .stat .v{font-size:28px;font-weight:bold;color:var(--navy)}
+  .stat .l{font-size:12.5px;color:var(--grey);margin-top:2px}
+  .stat.green .v{color:var(--green)}
+  h2{font-size:16px;color:var(--navy);margin:24px 0 10px}
+  .panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th{background:var(--navy);color:#fff;text-align:left;padding:9px 10px;font-weight:bold}
+  td{padding:9px 10px;border-bottom:1px solid var(--line)}
+  tr:nth-child(even) td{background:#f7fafc}
+  .tag{display:inline-block;font-size:11px;font-weight:bold;padding:3px 9px;border-radius:12px}
+  .tag.active{background:var(--lightg);color:#2c6b45}
+  .tag.pending{background:#FBE4D5;color:#9a4a1e}
+  .bars{display:flex;align-items:flex-end;gap:6px;height:130px;padding-top:10px}
+  .bar{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px}
+  .bar .col{width:100%;background:var(--blue);border-radius:4px 4px 0 0;min-height:2px}
+  .bar .num{font-size:11px;color:var(--navy);font-weight:bold}
+  .bar .day{font-size:10px;color:var(--grey)}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .ref{display:flex;justify-content:space-between;font-size:13px;padding:7px 0;border-bottom:1px solid var(--line)}
+  .empty{color:var(--grey);font-size:13px;padding:10px 0}
+  @media(max-width:720px){.cards{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <h1>Tableau de bord MandIMMO</h1>
+    <a class="back" href="/">&larr; Retour à l'appli</a>
+  </div>
+  <div class="muted" id="updated">Chargement…</div>
+
+  <div class="cards">
+    <div class="stat"><div class="v" id="s-signups">—</div><div class="l">Comptes créés</div></div>
+    <div class="stat green"><div class="v" id="s-active">—</div><div class="l">Comptes actifs</div></div>
+    <div class="stat"><div class="v" id="s-visits">—</div><div class="l">Visites (total)</div></div>
+    <div class="stat"><div class="v" id="s-visits7">—</div><div class="l">Visites (7 jours)</div></div>
+  </div>
+
+  <h2>Visites — 14 derniers jours</h2>
+  <div class="panel"><div class="bars" id="bars"></div></div>
+
+  <div class="two">
+    <div>
+      <h2>Comptes créés</h2>
+      <div class="panel"><div id="signupsBox"><div class="empty">Chargement…</div></div></div>
+    </div>
+    <div>
+      <h2>D'où viennent les visiteurs</h2>
+      <div class="panel"><div id="refsBox"><div class="empty">Chargement…</div></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function dkey(d){return d.toISOString().slice(0,10);}
+  function fmtDate(s){try{return new Date(s).toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'2-digit'});}catch(e){return s||'';}}
+
+  fetch('/api/admin/data').then(function(r){
+    if(r.status===401){location.href='/login';return null;}
+    return r.json();
+  }).then(function(d){
+    if(!d) return;
+    var agents=d.agents||[], visits=d.visits||[];
+
+    // Stat cards
+    var active=agents.filter(function(a){return a.status==='active';}).length;
+    document.getElementById('s-signups').textContent=agents.length;
+    document.getElementById('s-active').textContent=active;
+    document.getElementById('s-visits').textContent=visits.length;
+
+    // Last 14 days buckets
+    var days=[], counts={}, now=new Date();
+    for(var i=13;i>=0;i--){ var dt=new Date(now); dt.setDate(now.getDate()-i); var k=dkey(dt); days.push(k); counts[k]=0; }
+    var v7=0, weekAgo=new Date(now); weekAgo.setDate(now.getDate()-7);
+    visits.forEach(function(v){
+      var t=v.created_at?new Date(v.created_at):null; if(!t)return;
+      var k=dkey(t); if(k in counts) counts[k]++;
+      if(t>=weekAgo) v7++;
+    });
+    document.getElementById('s-visits7').textContent=v7;
+
+    var max=Math.max(1,Math.max.apply(null,days.map(function(k){return counts[k];})));
+    document.getElementById('bars').innerHTML=days.map(function(k){
+      var c=counts[k]; var h=Math.round(c/max*100);
+      var lbl=k.slice(8)+'/'+k.slice(5,7);
+      return '<div class="bar"><div class="num">'+c+'</div><div class="col" style="height:'+h+'%"></div><div class="day">'+lbl+'</div></div>';
+    }).join('');
+
+    // Signups table
+    if(agents.length){
+      document.getElementById('signupsBox').innerHTML='<table><tr><th>Email</th><th>Statut</th><th>Date</th></tr>'+
+        agents.map(function(a){
+          var t=a.status==='active'?'<span class="tag active">actif</span>':'<span class="tag pending">en attente</span>';
+          return '<tr><td>'+esc(a.email)+'</td><td>'+t+'</td><td>'+fmtDate(a.created_at)+'</td></tr>';
+        }).join('')+'</table>';
+    } else {
+      document.getElementById('signupsBox').innerHTML='<div class="empty">Aucun compte créé pour le moment.</div>';
+    }
+
+    // Referrers
+    var refs={};
+    visits.forEach(function(v){
+      var r=(v.referrer||'').trim();
+      var label='Direct / inconnu';
+      if(r){ try{ label=new URL(r).hostname.replace(/^www\./,''); }catch(e){ label=r.slice(0,40); } }
+      refs[label]=(refs[label]||0)+1;
+    });
+    var refArr=Object.keys(refs).map(function(k){return [k,refs[k]];}).sort(function(a,b){return b[1]-a[1];}).slice(0,10);
+    if(refArr.length){
+      document.getElementById('refsBox').innerHTML=refArr.map(function(x){
+        return '<div class="ref"><span>'+esc(x[0])+'</span><b>'+x[1]+'</b></div>';
+      }).join('');
+    } else {
+      document.getElementById('refsBox').innerHTML='<div class="empty">Aucune visite enregistrée pour le moment.</div>';
+    }
+
+    document.getElementById('updated').textContent='Mis à jour le '+new Date().toLocaleString('fr-FR');
+  }).catch(function(){
+    document.getElementById('updated').textContent='Erreur de chargement.';
+  });
+</script>
+</body>
+</html>

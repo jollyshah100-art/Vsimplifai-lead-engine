@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MandIMMO — Leads consentis</title>
+<style>
+  :root{--navy:#1F4E79;--blue:#2E75B6;--green:#2E8B57;--lightg:#E2F0E6;--light:#EAF2FA;--grey:#5f6b76;--line:#e3e8ee}
+  *{box-sizing:border-box}
+  body{margin:0;background:#f4f6f9;font-family:Arial,Helvetica,sans-serif;color:#1d2733}
+  .app{max-width:1040px;margin:18px auto;background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;display:grid;grid-template-columns:220px 1fr;min-height:620px}
+  .side{background:var(--navy);color:#fff;padding:20px 14px}
+  .brand{font-size:17px;font-weight:bold}.brand small{display:block;color:#bcd3ea;font-size:11px;margin-top:4px}
+  .nav{margin-top:22px;display:flex;flex-direction:column;gap:8px}
+  .nav button{all:unset;cursor:pointer;padding:11px 12px;border-radius:10px;color:#dce8f5;font-size:14px}
+  .nav button.active{background:#2c63a0;color:#fff}.nav button:hover{background:#26568c}
+  .main{padding:22px 24px}
+  .hi{font-size:20px;font-weight:bold;color:var(--navy)}
+  .sub{color:var(--grey);font-size:13px;margin:6px 0 16px}
+  .pill{background:var(--lightg);color:#2c6b45;font-size:12px;font-weight:bold;padding:6px 12px;border-radius:20px;float:right}
+  .view{display:none}.view.active{display:block}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th{background:var(--navy);color:#fff;text-align:left;padding:9px 10px}
+  td{padding:9px 10px;border-bottom:1px solid var(--line)}
+  tr:nth-child(even) td{background:#f7fafc}
+  .score{font-weight:bold;color:var(--green)}
+  .btn{all:unset;cursor:pointer;background:var(--green);color:#fff;font-size:12.5px;font-weight:bold;padding:8px 13px;border-radius:8px;display:inline-block}
+  .btn.blue{background:var(--blue)}.btn.ghost{background:#fff;color:var(--navy);border:1px solid var(--blue)}
+  .card{border:1px solid var(--line);border-radius:12px;padding:16px;background:#fff;max-width:420px}
+  .card h4{margin:0 0 10px;color:var(--navy)}
+  input{width:100%;padding:9px 11px;margin-bottom:9px;border:1px solid var(--line);border-radius:8px;font-size:14px}
+  .lead{display:flex;justify-content:space-between;align-items:center;border:1px solid var(--line);border-radius:11px;padding:11px 13px;margin-bottom:10px}
+  .lead b{color:var(--navy)}
+  .tag{display:inline-block;background:var(--lightg);color:#2c6b45;font-size:11px;font-weight:bold;padding:3px 9px;border-radius:12px;margin-right:6px}
+  .tag.amber{background:#FBE4D5;color:#9a4a1e}.tag.blue{background:var(--light);color:var(--blue)}
+  .note{font-size:12px;color:var(--grey);margin-top:12px}
+  .ok{color:var(--green);font-weight:bold}
+  .help-link{float:right;font-size:12px;color:#2E75B6;text-decoration:none;margin-right:14px;font-weight:bold}
+  .modal-bg{position:fixed;inset:0;background:rgba(15,30,50,.55);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+  .modal-bg.show{display:flex}
+  .modal{background:#fff;border-radius:16px;max-width:480px;width:100%;padding:26px 26px 22px;box-shadow:0 14px 44px rgba(0,0,0,.28);font-family:Arial,Helvetica,sans-serif}
+  .modal h2{color:var(--navy);margin:0 0 8px;font-size:21px}
+  .modal .m-lead{display:block;border:none;color:#36424f;font-size:14px;line-height:1.55;margin:0 0 18px}
+  .modal ol{margin:0 0 16px;padding:0;list-style:none;counter-reset:step}
+  .modal li{position:relative;padding:11px 0 11px 44px;border-top:1px solid var(--line);font-size:13.5px;color:#36424f;line-height:1.45}
+  .modal li:first-child{border-top:none}
+  .modal li b{color:var(--navy)}
+  .modal li::before{counter-increment:step;content:counter(step);position:absolute;left:0;top:10px;width:28px;height:28px;border-radius:50%;background:var(--green);color:#fff;font-weight:bold;display:flex;align-items:center;justify-content:center;font-size:14px}
+  .modal .foot{font-size:12.5px;color:var(--grey);margin:0 0 16px}
+  .modal .closebtn{all:unset;cursor:pointer;background:var(--navy);color:#fff;font-weight:bold;font-size:14px;padding:11px 18px;border-radius:9px;display:block;text-align:center}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand">MandIMMO<small>Moteur de leads consentis · VsimplifAI</small></div>
+    <nav class="nav" id="nav">
+      <button class="active" data-v="leads">Biens à prospecter</button>
+      <button data-v="guide">Guide pratique</button>
+      <button data-v="account">Mon lien de capture</button>
+      <button data-v="capture">Tester la capture</button>
+      <button data-v="optin">Mes leads (consentis)</button>
+      <button data-v="pricing">Tarifs</button>
+    </nav>
+  </aside>
+  <main class="main">
+    <div><span class="pill">Consentement préalable · Traçabilité certifiée</span>
+      <a href="#" onclick="logout();return false;" style="float:right;font-size:12px;color:#5f6b76;text-decoration:none">Se déconnecter</a>
+      <a href="#" class="help-link" onclick="openWelcome();return false;">Aide</a>
+      <div class="hi" id="greeting">Bonjour</div></div>
+    <div class="sub" id="agentSub">Données réelles servies par le serveur. Testez le flux de consentement vous-même.</div>
+
+    <section class="view active" data-v="leads">
+      <p style="font-size:13.5px;color:#36424f">L'IA a classé vos biens par probabilité de vente (score sur 9) :</p>
+      <table id="propTable"><tr><th>Adresse</th><th>Signal</th><th>Score</th></tr></table>
+      <div class="note">Score indicatif des signaux de mise en vente — concentrez vos efforts sur les scores les plus élevés.</div>
+    </section>
+
+    <section class="view" data-v="guide">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <p style="font-size:14px;color:#36424f;margin:0"><b>Guide pratique</b> : comment utiliser MandIMMO pour acquérir des mandats sur les réseaux et sur le terrain.</p>
+        <div style="display:flex;gap:6px">
+          <button class="btn blue" id="btn-lang-fr" onclick="switchGuideLang('fr')" style="font-size:11.5px;padding:5px 10px">🇫🇷 Français</button>
+          <button class="btn ghost" id="btn-lang-en" onclick="switchGuideLang('en')" style="font-size:11.5px;padding:5px 10px">🇬🇧 English</button>
+        </div>
+      </div>
+
+      <div id="guide-content-fr">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
+          <div class="card" style="max-width:none">
+            <h4 style="color:#1F4E79;margin-top:0">📱 1. Publicités Meta (Instagram & Facebook)</h4>
+            <p style="font-size:13px;color:#36424f;line-height:1.5">
+              <b>Objectif :</b> Capter les propriétaires de votre secteur qui songent à vendre.<br>
+              <b>Action :</b> Créez une publicité locale (5 à 10 €/jour) ciblant votre ville/quartier. Redirigez vers votre <b>lien de capture personnel</b>.
+            </p>
+            <div style="background:#f4f6f9;border-left:3px solid #2E8B57;padding:8px 10px;font-size:12.5px;border-radius:4px;margin-top:8px">
+              <b>Exemple d'accroche :</b><br>
+              « Propriétaire à <i>[Votre Ville]</i> ? Découvrez l'estimation confidentielle et gratuite de votre bien en 2 minutes par notre agence locale. Cliquez ci-dessous pour recevoir votre rapport. »
+            </div>
+          </div>
+
+          <div class="card" style="max-width:none">
+            <h4 style="color:#1F4E79;margin-top:0">💼 2. Prospection LinkedIn (Notoriété & Réseau)</h4>
+            <p style="font-size:13px;color:#36424f;line-height:1.5">
+              <b>Objectif :</b> Vous positionner en expert local incontournable.<br>
+              <b>Action :</b> Publiez 1 à 2 fois par semaine sur les tendances du marché local (prix au m², taux d'intérêt, biens vendus).
+            </p>
+            <div style="background:#f4f6f9;border-left:3px solid #2E75B6;padding:8px 10px;font-size:12.5px;border-radius:4px;margin-top:8px">
+              <b>Conseil d'action :</b><br>
+              Ajoutez votre lien de capture en bio et en premier commentaire de chaque post : <i>« Vous souhaitez connaître la valeur exacte de votre bien à [Ville] ? Lien d'estimation gratuite en commentaire. »</i>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div class="card" style="max-width:none">
+            <h4 style="color:#1F4E79;margin-top:0">📄 3. Flyers, Boîtage & Panneaux (QR Code)</h4>
+            <p style="font-size:13px;color:#36424f;line-height:1.5">
+              <b>Objectif :</b> Convertir vos supports physiques en leads digitaux qualifiés.<br>
+              <b>Action :</b> Téléchargez le QR code depuis l'onglet <i>« Mon lien de capture »</i> et imprimez-le sur :
+            </p>
+            <ul style="font-size:12.5px;color:#36424f;padding-left:18px;margin:6px 0">
+              <li>Vos panneaux « Vendu » ou « À Vendre »</li>
+              <li>Vos flyers de boîtage dans votre zone de chalandise</li>
+              <li>Vos cartes de visite professionnelles</li>
+            </ul>
+          </div>
+
+          <div class="card" style="max-width:none">
+            <h4 style="color:#1F4E79;margin-top:0">⚖️ 4. Traçabilité Bloctel / RGPD & Registre</h4>
+            <p style="font-size:13px;color:#36424f;line-height:1.5">
+              <b>Gestion du consentement préalable :</b><br>
+              Chaque prospect confirme son accord par email ou SMS (Double Opt-In).
+            </p>
+            <p style="font-size:12.5px;color:#36424f;margin-top:6px">
+              En cas de contrôle DGCCRF ou CNIL, cliquez sur <b>« Exporter le registre de consentement (CSV) »</b> dans l'onglet <i>Mes leads</i> pour obtenir la preuve horodatée de chaque démarche.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div id="guide-content-en" style="display:none">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
+          <div class="card" style="max-width:none">
+            <h4 style="color:#1F4E79;margin-top:0">📱 1. Meta Ads (Instagram & Facebook)</h4>
+            <p style="font-size:13px;color:#36424f;line-height:1.5">
+              <b>Objective:</b> Capture local property owners planning to sell.<br>
+              <b>Action:</b> Set up hyper-local ads (€5–€10/day) targeting your town/postal code. Set the destination URL to your <b>personal capture link</b>.
+            </p>
+            <div style="background:#f4f6f9;border-left:3px solid #2E8B57;padding:8px 10px;font-size:12.5px;border-radius:4px;margin-top:8px">
+              <b>Sample Ad Copy:</b><br>
+              "Homeowner in <i>[Your City]</i>? Get a free, confidential property valuation delivered by our certified local agency in 2 minutes. Click below to receive your report."
+            </div>
+          </div>
+
+          <div class="card" style="max-width:none">
+            <h4 style="color:#1F4E79;margin-top:0">💼 2. LinkedIn Inbound Prospecting</h4>
+            <p style="font-size:13px;color:#36424f;line-height:1.5">
+              <b>Objective:</b> Establish yourself as the premier local real estate authority.<br>
+              <b>Action:</b> Share weekly local property trends (price per m², recent sales, interest rates).
+            </p>
+            <div style="background:#f4f6f9;border-left:3px solid #2E75B6;padding:8px 10px;font-size:12.5px;border-radius:4px;margin-top:8px">
+              <b>Pro Tip:</b><br>
+              Add your valuation capture link to your LinkedIn profile banner and in the first comment of your posts: <i>"Want an accurate estimation of your home? Link in the first comment."</i>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div class="card" style="max-width:none">
+            <h4 style="color:#1F4E79;margin-top:0">📄 3. Flyers, Yard Signs & Direct Mail (QR Code)</h4>
+            <p style="font-size:13px;color:#36424f;line-height:1.5">
+              <b>Objective:</b> Convert offline neighborhood visibility into qualified online leads.<br>
+              <b>Action:</b> Download your custom QR code from the <i>"Mon lien de capture"</i> tab and place it on:
+            </p>
+            <ul style="font-size:12.5px;color:#36424f;padding-left:18px;margin:6px 0">
+              <li>"Just Sold" / "For Sale" property yard signs</li>
+              <li>Neighborhood door-to-door direct mail flyers</li>
+              <li>Business cards and email signatures</li>
+            </ul>
+          </div>
+
+          <div class="card" style="max-width:none">
+            <h4 style="color:#1F4E79;margin-top:0">⚖️ 4. GDPR / Bloctel Compliance & Audit Shield</h4>
+            <p style="font-size:13px;color:#36424f;line-height:1.5">
+              <b>Consent traceability:</b><br>
+              Every prospect explicitly confirms their consent via email or SMS (Double Opt-In).
+            </p>
+            <p style="font-size:12.5px;color:#36424f;margin-top:6px">
+              During any regulatory audit, click <b>"Exporter le registre de consentement (CSV)"</b> in the <i>Mes leads</i> tab to download your certified, timestamped audit records.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" data-v="account">
+      <p style="font-size:13.5px;color:#36424f">Partagez ce lien (ou le QR) partout où vous êtes présent — annonces, réseaux sociaux, flyers, vitrine, signature email. Chaque personne qui le remplit devient <b>votre</b> lead consenti, rien que pour vous.</p>
+      <div class="card" style="max-width:560px">
+        <h4>Mon lien de capture</h4>
+        <input id="capUrl" readonly style="font-size:13px;background:#f7fafc">
+        <button class="btn" onclick="copyCap()">Copier le lien</button>
+        <span id="capCopied" class="ok" style="display:none;margin-left:8px">Copié !</span>
+        <div style="margin-top:14px;text-align:center"><img id="capQR" alt="QR code de votre lien" style="width:160px;height:160px;border:1px solid var(--line);border-radius:8px"></div>
+        <div class="note">Imprimez le QR sur vos flyers ou en vitrine. Scannez-le pour tester vous-même.</div>
+      </div>
+      <div class="card" style="max-width:560px;margin-top:16px">
+        <h4>Mon profil</h4>
+        <label style="font-size:12px;color:#5f6b76;display:block;margin-bottom:3px">Votre nom (affiché aux prospects)</label>
+        <input id="pfName" placeholder="Ex. Camille Durand">
+        <label style="font-size:12px;color:#5f6b76;display:block;margin:8px 0 3px">Votre agence</label>
+        <input id="pfAgency" placeholder="Ex. Durand Immobilier">
+        <button class="btn" onclick="saveProfile()">Enregistrer</button>
+        <span id="pfMsg" class="ok" style="display:none;margin-left:8px">Enregistré !</span>
+        <div class="note">Votre nom et votre agence apparaissent sur la page de capture et dans le texte de consentement (obligation légale : le prospect doit savoir qui le contactera).</div>
+      </div>
+    </section>
+
+    <section class="view" data-v="capture">
+      <p style="font-size:13.5px;color:#36424f">Simulez un prospect qui demande son estimation. Cela crée un lead « en attente », puis vous confirmez (comme si la personne répondait OUI).</p>
+      <div class="card">
+        <h4>Demande d'estimation</h4>
+        <input id="cname" placeholder="Nom" value="Mme Rousseau">
+        <input id="cphone" placeholder="Téléphone" value="0612345678">
+        <input id="cemail" placeholder="Email" value="rousseau@example.fr">
+        <button class="btn" onclick="optin()">Demander mon estimation</button>
+        <div id="captureMsg" class="note"></div>
+      </div>
+    </section>
+
+    <section class="view" data-v="optin">
+      <p style="font-size:13.5px;color:#36424f">Leads et statut de consentement. Seuls les « confirmés » sont appelables.</p>
+      <a class="btn blue" href="/api/export.csv" style="display:inline-block;text-decoration:none;margin-bottom:12px">Exporter le registre de consentement (CSV)</a>
+      <div id="leadList"></div>
+    </section>
+
+    <section class="view" data-v="pricing">
+      <p style="font-size:13.5px;color:#36424f">Un seul abonnement, simple et sans engagement. Réseaux et formation sur devis.</p>
+      <div id="planList" style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;max-width:620px"></div>
+      <div class="note" style="margin-top:14px">Formation MandIMMO (1 jour) et tarifs réseau : sur devis — <b>contact@vsimplifai.eu</b>.</div>
+    </section>
+  </main>
+</div>
+
+<div class="modal-bg" id="welcomeModal">
+  <div class="modal">
+    <h2>Bienvenue sur MandIMMO</h2>
+    <p class="m-lead">MandIMMO vous apporte des propriétaires qui ont <b>dit OUI</b> pour être contactés — des contacts consentis, prêts à vous parler. Fini les appels à froid risqués : ici, chaque contact a donné son accord préalable.</p>
+    <ol>
+      <li><b>Biens à prospecter</b> — l'application classe les biens par probabilité de vente. Concentrez vos efforts sur les meilleurs scores.</li>
+      <li><b>Tester la capture</b> — un propriétaire demande son estimation gratuite et confirme son accord par email (le fameux « OUI »).</li>
+      <li><b>Mes leads (consentis)</b> — vous y retrouvez les contacts qui ont confirmé. Eux seuls sont appelables, en toute légalité. Vous pouvez exporter le registre quand vous voulez.</li>
+    </ol>
+    <p class="foot">Une question plus tard ? Cliquez sur « Aide » en haut à droite, à tout moment.</p>
+    <button class="closebtn" onclick="closeWelcome()">C'est parti</button>
+  </div>
+</div>
+<script>
+  function openWelcome(){ document.getElementById('welcomeModal').classList.add('show'); }
+  function closeWelcome(){ document.getElementById('welcomeModal').classList.remove('show'); try{ localStorage.setItem('mandimmo_welcomed','1'); }catch(e){} }
+  try{ if(!localStorage.getItem('mandimmo_welcomed')) document.getElementById('welcomeModal').classList.add('show'); }catch(e){ document.getElementById('welcomeModal').classList.add('show'); }
+</script>
+<script>
+  const nav=document.getElementById('nav');
+  nav.onclick=e=>{const b=e.target.closest('button');if(!b)return;
+    document.querySelectorAll('#nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');
+    document.querySelectorAll('.view').forEach(s=>s.classList.toggle('active',s.dataset.v===b.dataset.v));
+    if(b.dataset.v==='optin') loadLeads();
+    if(b.dataset.v==='pricing') loadPlans();};
+
+  async function loadPlans(){
+    const r=await fetch('/api/plans');const d=await r.json();
+    document.getElementById('planList').innerHTML=d.map(pl=>{
+      const hl=pl.highlight?'border:2px solid #2E8B57;':'border:1px solid #e3e8ee;';
+      const feats=pl.features.map(f=>`<li style="font-size:12px;color:#36424f;margin:5px 0">✓ ${f}</li>`).join('');
+      return `<div style="${hl}border-radius:12px;padding:14px;background:#fff">
+        <div style="font-family:Georgia;font-size:16px;font-weight:bold;color:#1F4E79">${pl.name}</div>
+        <div style="font-size:11px;color:#5f6b76;margin-bottom:8px">${pl.audience}</div>
+        <div style="font-size:22px;font-weight:bold;color:#2E8B57">${pl.price}<span style="font-size:11px;color:#5f6b76;font-weight:normal"> ${pl.unit}</span></div>
+        <ul style="list-style:none;padding:0;margin:8px 0">${feats}</ul>
+        <a href="${pl.contact?'mailto:contact@vsimplifai.eu':'/login?plan='+pl.id}" class="btn" style="display:block;width:100%;text-align:center;box-sizing:border-box;text-decoration:none">${pl.cta}</a>
+      </div>`;
+    }).join('');
+  }
+
+  async function loadProps(){
+    const r=await fetch('/api/properties');
+    if(r.status===401){location.href='/login';return;}
+    const d=await r.json();
+    const arr=Array.isArray(d)?d:[];
+    const t=document.getElementById('propTable');
+    t.innerHTML='<tr><th>Adresse</th><th>Signal</th><th>Score</th></tr>'+
+      arr.map(p=>`<tr><td>${p.address}</td><td>${p.reason}</td><td class="score">${p.score}/9</td></tr>`).join('');
+  }
+  async function loadMe(){
+    const r=await fetch('/api/me');
+    if(r.status===401){location.href='/login';return;}
+    const d=await r.json();
+    if(d&&d.email){
+      const who = d.display_name || d.email.split('@')[0];
+      document.getElementById('greeting').textContent='Bonjour '+who;
+      document.getElementById('agentSub').textContent='Connecté : '+d.email+' · formule '+(d.plan||'')+' ('+(d.status||'')+')';
+      if(d.captureUrl){
+        document.getElementById('capUrl').value=d.captureUrl;
+        document.getElementById('capQR').src='https://api.qrserver.com/v1/create-qr-code/?size=160x160&data='+encodeURIComponent(d.captureUrl);
+      }
+      document.getElementById('pfName').value=d.display_name||'';
+      document.getElementById('pfAgency').value=d.agency||'';
+    }
+  }
+  function copyCap(){
+    const i=document.getElementById('capUrl'); i.select();
+    navigator.clipboard.writeText(i.value).then(function(){
+      const c=document.getElementById('capCopied'); c.style.display='inline'; setTimeout(function(){c.style.display='none';},2000);
+    }).catch(function(){});
+  }
+  async function saveProfile(){
+    const display_name=document.getElementById('pfName').value.trim();
+    const agency=document.getElementById('pfAgency').value.trim();
+    const r=await fetch('/api/profile',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({display_name,agency})});
+    if(r.ok){ const m=document.getElementById('pfMsg'); m.style.display='inline'; setTimeout(function(){m.style.display='none';},2000); loadMe(); }
+  }
+  async function logout(){ await fetch('/api/logout',{method:'POST'}); location.href='/login'; }
+  async function optin(){
+    const body={name:cname.value,phone:cphone.value,email:cemail.value,agent:'Camille',magnet:'Estimation gratuite'};
+    const r=await fetch('/api/optin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const d=await r.json();
+    document.getElementById('captureMsg').innerHTML='<span class="ok">✓</span> '+d.message+' (Lead '+d.id+' créé, statut: en attente). Ouvrez « Qui a consenti » pour confirmer.';
+  }
+  async function loadLeads(){
+    const r=await fetch('/api/leads');
+    if(r.status===401){location.href='/login';return;}
+    const d=await r.json();
+    const arr=Array.isArray(d)?d:[];
+    const fmt=t=>{try{return new Date(t).toLocaleString('fr-FR');}catch(e){return t;}};
+    document.getElementById('leadList').innerHTML=arr.map(l=>{
+      const confirmed=l.consent_status==='confirmed';
+      const tag=confirmed?`<span class="tag blue">Consentement OK</span>`:`<span class="tag amber">En attente</span>`;
+      const intent=l.intent?`<span class="tag">${l.intent}</span>`:'';
+      const proof=confirmed&&l.confirmed_at?`<br><span class="note" style="font-size:12px">Consentement confirmé le ${fmt(l.confirmed_at)}</span>`:'';
+      const action=confirmed?`<span class="btn">Appeler</span>`:`<span class="btn ghost" onclick="confirmLead('${l.id}')">Simuler OUI</span>`;
+      return `<div class="lead"><div><b>${l.name||'(sans nom)'}</b> · ${l.phone||''}<br>${tag}${intent}${proof}</div><div>${action}</div></div>`;
+    }).join('')||'<div class="note">Aucun lead pour le moment.</div>';
+  }
+  async function confirmLead(id){
+    await fetch('/api/confirm',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,intent:'seller'})});
+    loadLeads();
+  }
+  loadMe();
+  loadProps();
+</script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+[
+  {
+    "id": "solo",
+    "name": "MandIMMO",
+    "price": "14,90 €",
+    "unit": "/ mois",
+    "audience": "Conseiller immobilier indépendant",
+    "features": [
+      "Page de capture illimitée",
+      "Tunnel de consentement (double opt-in)",
+      "Registre de preuves exportable (RGPD)",
+      "Leads consentis, prêts à appeler",
+      "Sans engagement, résiliable à tout moment"
+    ],
+    "cta": "Commencer",
+    "highlight": true
+  },
+  {
+    "id": "reseau",
+    "name": "Réseau & Formation",
+    "price": "Sur devis",
+    "unit": "",
+    "audience": "Agences, réseaux et formation des équipes",
+    "features": [
+      "Tarif volume pour vos conseillers",
+      "Formation MandIMMO (1 journée)",
+      "Déploiement et accompagnement dédiés"
+    ],
+    "cta": "Nous contacter",
+    "contact": true
+  }
+]

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estimation gratuite</title>
+<style>
+  :root{--navy:#1F4E79;--green:#2E8B57;--grey:#5f6b76;--line:#e6ebf1}
+  *{box-sizing:border-box}
+  body{margin:0;background:linear-gradient(160deg,#eef3f8,#f7f9fc);font-family:Arial,Helvetica,sans-serif;color:#1d2733;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:18px}
+  .card{max-width:520px;width:100%;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 40px rgba(31,78,121,.08);overflow:hidden}
+  .head{background:var(--navy);color:#fff;padding:22px 24px}
+  .head .agency{font-size:12px;color:#bcd3ea;letter-spacing:.5px}
+  .head h1{margin:6px 0 4px;font-size:22px}
+  .head p{margin:0;font-size:13px;color:#dceaf7}
+  .body{padding:22px 24px}
+  .magnets{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+  .magnet{cursor:pointer;border:1px solid var(--line);border-radius:20px;padding:7px 13px;font-size:12.5px;color:var(--navy)}
+  .magnet.active{background:var(--green);color:#fff;border-color:var(--green)}
+  label{font-size:12px;color:var(--grey);display:block;margin:9px 0 4px}
+  input{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:9px;font-size:14px}
+  .row{display:flex;gap:10px}.row>div{flex:1}
+  .btn{all:unset;cursor:pointer;background:var(--green);color:#fff;font-weight:bold;font-size:15px;padding:13px;border-radius:11px;display:block;text-align:center;margin-top:16px}
+  .consent{font-size:11px;color:var(--grey);margin-top:12px;line-height:1.5}
+  .done{display:none;text-align:center;padding:10px 0}
+  .done h2{color:var(--green);margin:6px 0}
+  .done p{font-size:14px;color:#36424f}
+  .badge{display:inline-block;background:#E2F0E6;color:#2c6b45;font-size:11px;font-weight:bold;padding:5px 11px;border-radius:14px;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="head">
+    <div class="agency" id="agency">Votre agence</div>
+    <h1 id="headline">Combien vaut votre bien en 2026 ?</h1>
+    <p>Estimation gratuite, confidentielle et sans engagement — par <span id="agentName">votre conseiller</span>.</p>
+  </div>
+  <div class="body">
+    <form id="form">
+      <div class="magnets" id="magnets">
+        <span class="magnet active" data-m="Estimation gratuite">Estimation gratuite</span>
+        <span class="magnet" data-m="Rapport de marché">Rapport de marché</span>
+        <span class="magnet" data-m="Calculateur travaux">Valeur après travaux</span>
+      </div>
+      <div class="row"><div><label>Prénom</label><input id="firstname" required></div><div><label>Nom</label><input id="lastname" required></div></div>
+      <label>Email</label><input id="email" type="email" required>
+      <label>Téléphone</label><input id="phone" type="tel" required>
+      <button class="btn" type="submit">Recevoir mon estimation</button>
+      <p class="consent">En validant, vous demandez à être recontacté(e) par <span class="an">votre conseiller</span> (<span class="agencyName">votre agence</span>) au sujet de votre projet. Vous confirmerez votre accord par email/SMS. Consentement révocable à tout moment.</p>
+    </form>
+    <div class="done" id="done">
+      <h2>Presque terminé !</h2>
+      <p>Vérifiez votre <b>email</b> et vos <b>SMS</b> : cliquez le lien (ou répondez OUI) pour confirmer et recevoir votre estimation.</p>
+      <div class="badge">Consentement en attente de confirmation</div>
+    </div>
+  </div>
+</div>
+<script>
+  const qp = new URLSearchParams(location.search);
+  const agentId = qp.get('a') || '';
+  let agent = qp.get('agent') || 'votre conseiller';
+  let agency = qp.get('agency') || 'votre agence';
+  function paint(){
+    document.getElementById('agency').textContent = agency;
+    document.querySelectorAll('.agencyName').forEach(e => e.textContent = agency);
+    document.getElementById('agentName').textContent = agent;
+    document.querySelectorAll('.an').forEach(e => e.textContent = agent);
+  }
+  paint();
+  // Load the real agent name/agency from the capture link's agent id (trusted server data).
+  if (agentId) {
+    fetch('/api/capture-info?a=' + encodeURIComponent(agentId)).then(r => r.ok ? r.json() : null).then(d => {
+      if (d) { if (d.display_name) agent = d.display_name; if (d.agency) agency = d.agency; paint(); }
+    }).catch(function(){});
+  }
+
+  let magnet = 'Estimation gratuite';
+  document.getElementById('magnets').addEventListener('click', e => {
+    const m = e.target.closest('.magnet'); if(!m) return;
+    document.querySelectorAll('.magnet').forEach(x=>x.classList.remove('active'));
+    m.classList.add('active'); magnet = m.dataset.m;
+  });
+
+  document.getElementById('form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const payload = {
+      name: firstname.value.trim() + ' ' + lastname.value.trim(),
+      email: email.value.trim(), phone: phone.value.trim(),
+      magnet, agent_id: agentId, source: qp.get('source') || 'capture'
+    };
+    const r = await fetch('/api/optin', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    if (r.ok) { document.getElementById('form').style.display='none'; document.getElementById('done').style.display='block'; }
+    else { alert('Une erreur est survenue, merci de réessayer.'); }
+  });
+</script>
+</body>
+</html>

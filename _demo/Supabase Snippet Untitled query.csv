@@ -1,0 +1,45 @@
+table_name,ordinal_position,column_name,data_type,is_nullable,column_default
+agents,1,id,text,NO,null
+agents,2,email,text,YES,null
+agents,3,password,text,YES,null
+agents,4,plan,text,YES,'solo'::text
+agents,5,status,text,YES,'pending'::text
+agents,6,created_at,timestamp with time zone,YES,now()
+agents,7,display_name,text,YES,null
+agents,8,agency,text,YES,null
+agents,9,reset_token,text,YES,null
+agents,10,reset_expires,timestamp with time zone,YES,null
+agents,11,stripe_customer_id,text,YES,null
+leads,1,id,text,NO,null
+leads,2,token,uuid,YES,gen_random_uuid()
+leads,3,name,text,YES,null
+leads,4,email,text,YES,null
+leads,5,phone,text,YES,null
+leads,6,magnet,text,YES,null
+leads,7,source,text,YES,null
+leads,8,agent,text,YES,null
+leads,9,consent_status,text,YES,'pending'::text
+leads,10,consent_text,text,YES,null
+leads,11,consent_channel,text,YES,'phone'::text
+leads,12,intent,text,YES,null
+leads,13,callable,boolean,YES,false
+leads,14,created_at,timestamp with time zone,YES,now()
+leads,15,confirmed_at,timestamp with time zone,YES,null
+leads,16,agent_id,text,YES,null
+properties,1,id,text,NO,null
+properties,2,address,text,YES,null
+properties,3,signal,text,YES,null
+properties,4,tenure_years,integer,YES,null
+properties,5,recent_permit,boolean,YES,false
+properties,6,neighbor_sold,boolean,YES,false
+properties,7,listing_expired,boolean,YES,false
+properties,8,marketplace_activity,boolean,YES,false
+properties,9,reason,text,YES,null
+properties,10,score,integer,YES,null
+properties,11,status,text,YES,'New'::text
+properties,12,agent,text,YES,null
+visits,1,id,uuid,NO,gen_random_uuid()
+visits,2,path,text,YES,null
+visits,3,referrer,text,YES,null
+visits,4,ua,text,YES,null
+visits,5,created_at,timestamp with time zone,NO,now()

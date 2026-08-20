@@ -1,0 +1,42 @@
+# One-click-ish deploy on Render (EU region = Frankfurt for GDPR).
+# In Render: New + → Blueprint → connect the repo → it reads this file.
+# Then add the secret values (marked sync:false) in the dashboard.
+services:
+  - type: web
+    name: vsimplifai-lead-engine
+    runtime: node
+    region: frankfurt
+    plan: starter
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: BASE_URL
+        sync: false           # set to your live https URL after first deploy
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: AI_MODEL
+        value: claude-3-5-sonnet-20241022
+      - key: BREVO_API_KEY
+        sync: false
+      - key: BREVO_SENDER_NAME
+        sync: false
+      - key: BREVO_SENDER_EMAIL
+        sync: false
+      - key: BREVO_SMS_SENDER
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: STRIPE_PRICE_SOLO
+        sync: false
+      - key: STRIPE_PRICE_TEAM
+        sync: false
+      - key: STRIPE_PRICE_AGENCY
+        sync: false

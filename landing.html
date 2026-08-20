@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MandIMMO — Appelez des propriétaires qui attendent votre estimation</title>
+<meta name="description" content="MandIMMO transforme vos flyers, annonces et réseaux en un flux continu de vendeurs qualifiés avec preuve de consentement horodatée, dans le respect des règles Bloctel et RGPD.">
+<style>
+  :root {
+    --primary: #0F2744;
+    --primary-light: #1A3E6D;
+    --accent: #10B981;
+    --accent-dark: #059669;
+    --accent-soft: #ECFDF5;
+    --accent-border: #A7F3D0;
+    --text-main: #0F172A;
+    --text-muted: #475569;
+    --text-sub: #64748B;
+    --bg-page: #FAFCFF;
+    --bg-card: #FFFFFF;
+    --border: #E2E8F0;
+    --border-light: #F1F5F9;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
+    --shadow-md: 0 10px 25px -5px rgba(15, 39, 68, 0.08), 0 8px 10px -6px rgba(15, 39, 68, 0.04);
+    --shadow-lg: 0 20px 35px -10px rgba(15, 39, 68, 0.12), 0 12px 16px -8px rgba(15, 39, 68, 0.06);
+    --radius-lg: 20px;
+    --radius-md: 14px;
+    --radius-sm: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg-page);
+    color: var(--text-main);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  a { color: var(--primary); text-decoration: none; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+  /* Header */
+  header {
+    position: sticky;
+    top: 0;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+    z-index: 50;
+  }
+  .hd {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 21px;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: -0.5px;
+  }
+  .brand .logo-icon {
+    width: 34px;
+    height: 34px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: #fff;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 900;
+    box-shadow: 0 4px 10px rgba(15, 39, 68, 0.2);
+  }
+  .brand small {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-sub);
+    letter-spacing: 0;
+  }
+  .nav-cta {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .nav-link {
+    font-size: 14.5px;
+    color: var(--text-muted);
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: var(--radius-sm);
+    transition: all .2s;
+  }
+  .nav-link:hover { color: var(--primary); background: var(--border-light); }
+
+  /* Buttons */
+  .btn {
+    all: unset;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all .2s ease;
+    box-sizing: border-box;
+  }
+  .btn.green {
+    background: linear-gradient(180deg, var(--accent) 0%, var(--accent-dark) 100%);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+  }
+  .btn.green:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45);
+  }
+  .btn.ghost {
+    background: #fff;
+    color: var(--primary);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+  .btn.ghost:hover {
+    background: var(--border-light);
+    border-color: #CBD5E1;
+  }
+  .btn.navy {
+    background: var(--primary);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(15, 39, 68, 0.25);
+  }
+  .btn.navy:hover {
+    background: var(--primary-light);
+    transform: translateY(-1px);
+  }
+  .btn.big { font-size: 15.5px; padding: 14px 26px; border-radius: 12px; }
+
+  /* Hero Section */
+  .hero-sec {
+    position: relative;
+    padding: 70px 0 60px;
+    background: radial-gradient(circle at 50% 0%, #EEF6FF 0%, var(--bg-page) 75%);
+    overflow: hidden;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 48px;
+    align-items: center;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    color: var(--primary);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 6px 16px;
+    border-radius: 30px;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    margin-bottom: 22px;
+  }
+  .hero-badge .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+  }
+  h1 {
+    font-size: 44px;
+    font-weight: 800;
+    line-height: 1.15;
+    color: var(--primary);
+    letter-spacing: -1.2px;
+    margin-bottom: 20px;
+  }
+  h1 .hl {
+    background: linear-gradient(135deg, var(--accent-dark) 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .lead {
+    font-size: 18.5px;
+    color: var(--text-muted);
+    line-height: 1.55;
+    margin-bottom: 32px;
+  }
+  .hero-cta {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .reassure {
+    margin-top: 18px;
+    font-size: 13px;
+    color: var(--text-sub);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* Mockup Card in Hero */
+  .hero-mockup {
+    position: relative;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow-lg);
+    transform: perspective(1000px) rotateY(-2deg) rotateX(2deg);
+    transition: transform .4s ease;
+  }
+  .hero-mockup:hover {
+    transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
+  }
+  .mockup-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-light);
+    margin-bottom: 16px;
+  }
+  .mockup-top .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--accent-soft);
+    color: var(--accent-dark);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+  .mockup-prop {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  .mockup-prop h4 { font-size: 15px; color: var(--primary); margin-bottom: 4px; }
+  .mockup-prop p { font-size: 12.5px; color: var(--text-sub); margin: 0; }
+  .mockup-val {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed #CBD5E1;
+  }
+  .mockup-val span { font-size: 12px; color: var(--text-sub); font-weight: 600; }
+  .mockup-val strong { font-size: 17px; color: var(--accent-dark); }
+  .mockup-optin {
+    background: #F0FDF4;
+    border: 1px solid var(--accent-border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .mockup-optin .check-ic {
+    width: 28px;
+    height: 28px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .mockup-optin div { font-size: 12px; color: #166534; line-height: 1.3; }
+  .mockup-optin strong { display: block; font-size: 13px; color: #14532D; }
+
+  /* Trust Bar */
+  .trust-bar {
+    padding: 30px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: #fff;
+  }
+  .trust-flex {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .trust-point {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-muted);
+  }
+  .trust-point span.ic {
+    font-size: 18px;
+    color: var(--accent-dark);
+  }
+
+  /* Section Styling */
+  section { padding: 80px 0; }
+  .sec-head { text-align: center; max-width: 720px; margin: 0 auto 50px; }
+  .sec-tag {
+    display: inline-block;
+    font-size: 12.5px;
+    font-weight: 800;
+    color: var(--primary-light);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: #E8F2FF;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+  h2 {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: -0.8px;
+    line-height: 1.25;
+    margin-bottom: 14px;
+  }
+  .sub {
+    font-size: 16.5px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* Comparison Grid (Pige vs MandIMMO) */
+  .comp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    align-items: stretch;
+  }
+  .comp-card {
+    border-radius: var(--radius-lg);
+    padding: 32px 28px;
+    position: relative;
+  }
+  .comp-card.bad {
+    background: #FFF7F5;
+    border: 1px solid #FED7AA;
+  }
+  .comp-card.good {
+    background: #F0FDF4;
+    border: 2px solid var(--accent);
+    box-shadow: 0 12px 30px rgba(16, 185, 129, 0.1);
+  }
+  .comp-card h3 {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .comp-card.bad h3 { color: #9A3412; }
+  .comp-card.good h3 { color: #166534; }
+  .comp-card ul { list-style: none; }
+  .comp-card li {
+    font-size: 15px;
+    margin-bottom: 14px;
+    padding-left: 28px;
+    position: relative;
+    line-height: 1.45;
+  }
+  .comp-card.bad li { color: #7C2D12; }
+  .comp-card.bad li::before { content: "✕"; position: absolute; left: 0; color: #EA580C; font-weight: 900; }
+  .comp-card.good li { color: #14532D; font-weight: 500; }
+  .comp-card.good li::before { content: "✓"; position: absolute; left: 0; color: var(--accent-dark); font-weight: 900; font-size: 17px; }
+
+  /* Bento Acquisition Grid */
+  .bento-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  .bento-item {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 26px 22px;
+    box-shadow: var(--shadow-sm);
+    transition: all .25s ease;
+  }
+  .bento-item:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: #CBD5E1;
+  }
+  .bento-icon {
+    width: 44px;
+    height: 44px;
+    background: #F1F5F9;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin-bottom: 16px;
+  }
+  .bento-item h3 {
+    font-size: 16.5px;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 8px;
+  }
+  .bento-item p {
+    font-size: 13.5px;
+    color: var(--text-muted);
+    line-height: 1.45;
+  }
+
+  /* Process Steps */
+  .process-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .process-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 30px 24px;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+  }
+  .step-num {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: #fff;
+    font-weight: 800;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    margin-bottom: 16px;
+  }
+  .process-card h3 {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 10px;
+  }
+  .process-card p {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* Live Interactive Demo CTA Box */
+  .demo-box {
+    background: linear-gradient(135deg, #0F2744 0%, #1A3E6D 100%);
+    color: #fff;
+    border-radius: var(--radius-lg);
+    padding: 50px 36px;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+  }
+  .demo-box h2 { color: #fff; margin-bottom: 14px; }
+  .demo-box p { color: #D1E5F8; font-size: 17px; max-width: 680px; margin: 0 auto 28px; line-height: 1.5; }
+
+  /* Pricing Cards */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 28px;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+  .price-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 38px 32px;
+    box-shadow: var(--shadow-md);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .price-card.featured {
+    border: 2px solid var(--accent);
+    box-shadow: 0 16px 40px rgba(16, 185, 129, 0.12);
+  }
+  .price-card .rec-badge {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent);
+    color: #fff;
+    font-size: 11.5px;
+    font-weight: 800;
+    padding: 4px 14px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+  }
+  .price-header h3 { font-size: 21px; font-weight: 800; color: var(--primary); }
+  .price-header .price-amount {
+    font-size: 42px;
+    font-weight: 900;
+    color: var(--accent-dark);
+    margin: 12px 0 4px;
+    letter-spacing: -1px;
+  }
+  .price-header .price-amount small {
+    font-size: 15px;
+    color: var(--text-sub);
+    font-weight: 500;
+    letter-spacing: 0;
+  }
+  .price-features { list-style: none; margin: 24px 0 28px; text-align: left; }
+  .price-features li {
+    font-size: 14.5px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    padding-left: 26px;
+    position: relative;
+    line-height: 1.4;
+  }
+  .price-features li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 900;
+    font-size: 16px;
+  }
+
+  /* FAQ Accordion Grid */
+  .faq-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    max-width: 980px;
+    margin: 0 auto;
+  }
+  .faq-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+  }
+  .faq-card h3 {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 10px;
+    line-height: 1.35;
+  }
+  .faq-card p {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.55;
+  }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 36px 0;
+    background: #fff;
+    font-size: 13.5px;
+    color: var(--text-sub);
+    text-align: center;
+  }
+  footer a { color: var(--text-muted); margin: 0 10px; font-weight: 600; }
+  footer a:hover { color: var(--primary); }
+
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 36px; }
+    h1 { font-size: 34px; }
+    .bento-grid { grid-template-columns: 1fr 1fr; }
+    .process-grid, .comp-grid, .pricing-grid, .faq-grid { grid-template-columns: 1fr; }
+    .hero-mockup { transform: none; }
+  }
+  @media (max-width: 580px) {
+    .bento-grid { grid-template-columns: 1fr; }
+    h1 { font-size: 29px; }
+    .btn.big { width: 100%; }
+    .hero-cta { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap hd">
+    <a href="/" class="brand">
+      <div class="logo-icon">M</div>
+      <div>MandIMMO<small>Moteur de leads consentis · VsimplifAI</small></div>
+    </a>
+    <div class="nav-cta">
+      <a class="nav-link" href="/preview/funnel">Voir la démo</a>
+      <a class="btn ghost" href="/login">Se connecter</a>
+      <a id="cta-nav-signup" class="btn green" style="display:none" href="/login">Essayer MandIMMO</a>
+    </div>
+  </div>
+</header>
+
+<!-- HERO SECTION -->
+<section class="hero-sec">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-badge">
+          <span class="dot"></span> Prospection sur accord préalable · Traçabilité Bloctel &amp; RGPD
+        </div>
+        <h1>Fini la pige dans le vide.<br><span class="hl">Appelez des propriétaires qui attendent votre estimation.</span></h1>
+        <p class="lead">MandIMMO transforme vos flyers, annonces et réseaux sociaux en un flux continu de <b>vendeurs qualifiés</b> avec consentement horodaté. Des rendez-vous chaleureux, avec une traçabilité rigoureuse.</p>
+        
+        <div class="hero-cta">
+          <a id="cta-hero-signup" class="btn green big" style="display:none" href="/login">Démarrer mon essai gratuit</a>
+          <a class="btn ghost big" href="/preview/funnel">Tester le parcours prospect (Démo)</a>
+        </div>
+        <div id="hero-reassure" class="reassure" style="display:none">
+          🔒 3 jours d'essai gratuit, puis 14,90 €/mois · sans engagement · données en Europe
+        </div>
+      </div>
+
+      <!-- VISUAL UI MOCKUP -->
+      <div class="hero-mockup">
+        <div class="mockup-top">
+          <span style="font-size:13px;font-weight:bold;color:var(--primary)">Alerte Lead Consenti</span>
+          <span class="status">● Validé il y a 3 min</span>
+        </div>
+        <div class="mockup-prop">
+          <h4>Maison T5 — 142 m² avec Jardin</h4>
+          <p>📍 14 rue des Lilas, 33000 Bordeaux</p>
+          <div class="mockup-val">
+            <span>Fourchette DVF indicative</span>
+            <strong>485 000 € – 510 000 €</strong>
+          </div>
+        </div>
+        <div class="mockup-optin">
+          <div class="check-ic">✓</div>
+          <div>
+            <strong>Accord préalable certifié</strong>
+            Demande d'estimation envoyée · Autorisation d'appel validée
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="wrap trust-flex">
+    <div class="trust-point"><span class="ic">⚡</span> Estimation fluide en 2 min</div>
+    <div class="trust-point"><span class="ic">🛡️</span> Double Opt-In avec preuve horodatée</div>
+    <div class="trust-point"><span class="ic">📱</span> QR Code Haute Définition pour flyers</div>
+    <div class="trust-point"><span class="ic">📄</span> Registre exportable en 1 clic</div>
+  </div>
+</div>
+
+<!-- SECTION 1: COMPARISON -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">Comparatif</span>
+      <h2>La prospection immobilière a changé</h2>
+      <p class="sub">Appeler un particulier sans démarche préalable expose les agents à des contestations et à des sanctions administratives. Avec MandIMMO, chaque appel s'appuie sur une demande réelle.</p>
+    </div>
+
+    <div class="comp-grid">
+      <div class="comp-card bad">
+        <h3>❌ La pige traditionnelle (À froid)</h3>
+        <ul>
+          <li>Vous appelez des propriétaires agacés qui crient <i>« Pas d'agences ! »</i>.</li>
+          <li>Incertitude permanente sur l'inscription Bloctel et risques de signalement.</li>
+          <li>Aucune trace horodatée en cas de contestation ou de plainte.</li>
+          <li>Des heures perdues au téléphone pour un taux de transformation minime.</li>
+        </ul>
+      </div>
+
+      <div class="comp-card good">
+        <h3>✅ Avec MandIMMO (À la demande)</h3>
+        <ul>
+          <li>Vous appelez un propriétaire qui a <b>demandé son estimation</b> auprès de vous.</li>
+          <li>Chaque contact a validé son accord explicite par double opt-in horodaté.</li>
+          <li>Votre <b>registre de consentement</b> est exportable en 1 clic pour attester de vos démarches.</li>
+          <li>Vous arrivez en rendez-vous d'estimation physique en position d'expert bienvenu.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: BENTO CHANNELS -->
+<section style="background:#F8FAFC; border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">Vos Canaux d'Acquisition</span>
+      <h2>Où déployer votre machine à mandats ?</h2>
+      <p class="sub">MandIMMO vous fournit un lien d'estimation exclusif et un QR Code HD personnalisés à votre nom et agence. Déployez-les sur tous vos points de contact :</p>
+    </div>
+
+    <div class="bento-grid">
+      <div class="bento-item">
+        <div class="bento-icon">📬</div>
+        <h3>1. Flyers &amp; Boîtage</h3>
+        <p>Imprimez votre QR code sur vos flyers de quartier : <i>« Estimez votre bien en 2 min »</i>. Chaque scan devient votre prospect direct.</p>
+      </div>
+
+      <div class="bento-item">
+        <div class="bento-icon">📱</div>
+        <h3>2. Réseaux &amp; Meta Ads</h3>
+        <p>Placez votre lien en bio Instagram/LinkedIn ou lancez une publicité locale à 5 €/jour ciblant les propriétaires de votre ville.</p>
+      </div>
+
+      <div class="bento-item">
+        <div class="bento-icon">🪧</div>
+        <h3>3. Panneaux &amp; Vitrine</h3>
+        <p>Affichez le QR code sur vos panneaux « Vendu » ou en vitrine d'agence pour capter les riverains curieux de connaître le prix de leur bien.</p>
+      </div>
+
+      <div class="bento-item">
+        <div class="bento-icon">✉️</div>
+        <h3>4. Signature &amp; Devis</h3>
+        <p>Intégrez votre lien dans vos signatures d'emails et supports d'estimation pour réactiver vos anciens contacts et prescripteurs.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: HOW IT WORKS -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">Simplicité</span>
+      <h2>Comment ça marche</h2>
+      <p class="sub">Trois étapes simples et fluides. Aucune compétence technique requise.</p>
+    </div>
+
+    <div class="process-grid">
+      <div class="process-card">
+        <div class="step-num">1</div>
+        <h3>Le propriétaire fait sa demande</h3>
+        <p>Attiré par votre flyer, annonce ou panneau, il saisit son adresse et les caractéristiques de son bien sur votre page d'estimation personnalisée.</p>
+      </div>
+
+      <div class="process-card">
+        <div class="step-num">2</div>
+        <h3>Il valide son consentement</h3>
+        <p>Pour recevoir son rapport d'estimation indicatif, il confirme son accord explicite par email (Double Opt-In). L'accord est horodaté et enregistré.</p>
+      </div>
+
+      <div class="process-card">
+        <div class="step-num">3</div>
+        <h3>Vous recevez l'alerte &amp; appelez</h3>
+        <p>Vous êtes notifié avec la fiche complète du bien. Vous appelez un vendeur demandeur et réservez votre rendez-vous d'estimation sur place.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4: LIVE DEMO CTA -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="demo-box">
+      <h2>Testez exactement ce que verra votre prospect</h2>
+      <p>Ouvrez la simulation complète : questionnaire d'estimation interactif, rapport préliminaire basé sur les données foncières réelles et recueil du consentement.</p>
+      <a class="btn green big" href="/preview/funnel">Ouvrir la démonstration en direct</a>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 5: PRICING -->
+<section style="background:#F8FAFC; border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">Tarif Transparent</span>
+      <h2>Rentabilisé dès le 1er mandat</h2>
+      <p class="sub">Un seul mandat signé grâce à MandIMMO couvre plusieurs années d'abonnement. Sans engagement.</p>
+    </div>
+
+    <div class="pricing-grid">
+      <div class="price-card featured">
+        <span class="rec-badge">Offre Conseiller / Mandataire</span>
+        <div class="price-header">
+          <h3>MandIMMO Solo</h3>
+          <div class="price-amount">14,90 €<small> / mois</small></div>
+          <div id="price-trial-badge" style="font-size:13px;color:var(--accent-dark);font-weight:bold;display:none">3 jours d'essai gratuit</div>
+        </div>
+        <ul class="price-features">
+          <li id="price-trial-li" style="display:none">3 jours gratuits, puis 14,90 €/mois</li>
+          <li><b>Leads exclusifs</b> (aucun partage avec d'autres agents)</li>
+          <li><b>Entonnoir d'estimation personnalisé</b> à votre nom et agence</li>
+          <li><b>QR Code Haute Définition</b> prêt à imprimer pour vos flyers</li>
+          <li><b>Registre de consentement exportable</b> en 1 clic (format CSV)</li>
+          <li><b>Alertes instantanées</b> par email dès qu'un lead confirme</li>
+          <li><b>Scoring indicatif</b> des signaux de vente de votre secteur</li>
+          <li>Sans engagement, résiliable à tout moment en 1 clic</li>
+        </ul>
+        <a id="cta-price-signup" class="btn green big" style="display:none" href="/login">Démarrer mon essai gratuit</a>
+      </div>
+
+      <div class="price-card">
+        <div class="price-header">
+          <h3>Agences &amp; Réseaux</h3>
+          <div class="price-amount" style="font-size:32px; color:var(--primary)">Sur devis</div>
+          <div style="font-size:13px;color:var(--text-sub)">Pour les équipes et réseaux de mandataires</div>
+        </div>
+        <ul class="price-features">
+          <li>Déploiement multi-comptes avec tableau de bord superviseur</li>
+          <li>Formation MandIMMO d'une demi-journée pour vos conseillers</li>
+          <li>Intégration et accompagnement sur-mesure</li>
+          <li>Tarifs dégressifs selon le volume de conseillers</li>
+        </ul>
+        <a class="btn ghost big" href="mailto:contact@vsimplifai.eu?subject=Demande%20Devis%20R%C3%A9seau%20MandIMMO">Demander un devis réseau</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 6: FAQ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">FAQ</span>
+      <h2>Questions fréquentes des professionnels de l'immobilier</h2>
+      <p class="sub">Tout ce que vous devez savoir avant de déployer MandIMMO dans votre agence.</p>
+    </div>
+
+    <div class="faq-grid">
+      <div class="faq-card">
+        <h3>D'où viennent les prospects ? Est-ce que MandIMMO fournit des listes ?</h3>
+        <p>MandIMMO ne vend pas de fichiers froids. C'est votre <b>machine de capture et de conversion locale</b> : vous partagez votre lien et QR code sur vos flyers, réseaux et annonces. Chaque propriétaire qui clique ou scanne devient votre contact direct.</p>
+      </div>
+
+      <div class="faq-card">
+        <h3>La page d'estimation est-elle à mon nom et à mon image ?</h3>
+        <p>Absolument ! Votre nom, prénom, photo et le nom de votre agence ou réseau apparaissent clairement sur l'entonnoir d'estimation. Le propriétaire sait exactement quel professionnel local le contactera.</p>
+      </div>
+
+      <div class="faq-card">
+        <h3>D'où proviennent les données d'estimation ?</h3>
+        <p>Les estimations sont calculées à partir des bases ouvertes des valeurs foncières (DVF / Notaires). Elles fournissent une fourchette de prix indicative qui sert de point de départ pour organiser l'estimation physique sur place.</p>
+      </div>
+
+      <div class="faq-card">
+        <h3>Comment MandIMMO m'aide face aux obligations légales (Bloctel / RGPD) ?</h3>
+        <p>Chaque formulaire intègre les mentions d'information obligatoires et un mécanisme de double opt-in avec horodatage certifié. En cas de contrôle ou de contestation, vous pouvez exporter votre registre de consentements attestant de la démarche volontaire du prospect.</p>
+      </div>
+
+      <div class="faq-card">
+        <h3>Comment suis-je prévenu lorsqu'un propriétaire valide son accord ?</h3>
+        <p>Vous recevez instantanément une notification par email contenant les coordonnées du prospect et les caractéristiques de son bien immobilier, vous permettant de le rappeler rapidement.</p>
+      </div>
+
+      <div class="faq-card">
+        <h3>Puis-je résilier à tout moment ?</h3>
+        <p>Oui. L'abonnement est sans engagement de durée. Vous pouvez le gérer ou l'annuler en un clic depuis votre espace conseiller.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>MandIMMO — un produit <b>VsimplifAI</b></div>
+    <div style="margin-top:12px">
+      <a href="/preview/funnel">Démonstration</a> ·
+      <a href="mailto:contact@vsimplifai.eu">contact@vsimplifai.eu</a> ·
+      <a href="/mentions-legales.html">Mentions légales</a> ·
+      <a href="/politique-confidentialite.html">Confidentialité</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var SIMPLE_IDS = ['cta-nav-signup', 'cta-hero-signup', 'hero-reassure', 'price-trial-badge', 'price-trial-li'];
+  function reveal(){
+    SIMPLE_IDS.forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) el.style.display = '';
+    });
+    var priceBtn = document.getElementById('cta-price-signup');
+    if (priceBtn) priceBtn.style.display = 'inline-flex';
+  }
+  fetch('/api/config').then(function(r){ return r.json(); }).then(function(c){
+    if (c && c.signupEnabled && c.billing) reveal();
+  }).catch(function(){});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+[
+  { "id": "P1", "address": "12 rue des Tilleuls, Annecy-le-Vieux", "tenure_years": 14, "recent_permit": true, "neighbor_sold": false, "listing_expired": false, "marketplace_activity": false, "reason": "Permis de travaux récent + propriétaire depuis 14 ans" },
+  { "id": "P2", "address": "5 allée du Lac, Annecy-le-Vieux", "tenure_years": 11, "recent_permit": false, "neighbor_sold": true, "listing_expired": false, "marketplace_activity": false, "reason": "Voisin vendu 720k€ le mois dernier" },
+  { "id": "P3", "address": "28 av. de Genève, Annecy", "tenure_years": 9, "recent_permit": false, "neighbor_sold": false, "listing_expired": true, "marketplace_activity": false, "reason": "Annonce expirée il y a 40 jours" },
+  { "id": "P4", "address": "9 chemin des Vignes, Annecy-le-Vieux", "tenure_years": 19, "recent_permit": false, "neighbor_sold": false, "listing_expired": false, "marketplace_activity": true, "reason": "Propriétaire 19 ans + vente de meubles en ligne" },
+  { "id": "P5", "address": "3 impasse du Pré, Annecy", "tenure_years": 6, "recent_permit": false, "neighbor_sold": true, "listing_expired": false, "marketplace_activity": false, "reason": "Voisin vendu récemment" }
+]

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MandIMMO — Nouveau mot de passe</title>
+<style>
+  :root{--navy:#1F4E79;--green:#2E8B57;--grey:#5f6b76;--line:#e3e8ee}
+  body{margin:0;background:#f4f6f9;font-family:Arial,Helvetica,sans-serif;color:#1d2733}
+  .wrap{max-width:430px;margin:48px auto;background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px}
+  h1{font-size:22px;color:var(--navy);margin:0 0 4px}
+  .sub{color:var(--grey);font-size:13px;margin-bottom:18px}
+  label{font-size:12px;color:var(--grey);display:block;margin:10px 0 4px}
+  input{width:100%;padding:10px 11px;border:1px solid var(--line);border-radius:8px;font-size:14px}
+  .btn{all:unset;cursor:pointer;background:var(--green);color:#fff;font-weight:bold;font-size:14px;padding:11px 16px;border-radius:9px;display:block;text-align:center;margin-top:16px}
+  .msg{font-size:13px;margin-top:12px}
+  .ok{color:var(--green);font-weight:bold}.err{color:#b3261e}
+  a{color:var(--navy)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>MandIMMO</h1>
+  <div class="sub">Choisissez un nouveau mot de passe.</div>
+
+  <form id="form" onsubmit="return doReset(event)">
+    <label>Nouveau mot de passe</label>
+    <input id="pw" type="password" required minlength="6" placeholder="6 caractères minimum">
+    <label>Confirmez le mot de passe</label>
+    <input id="pw2" type="password" required minlength="6">
+    <button class="btn" type="submit">Enregistrer le nouveau mot de passe</button>
+    <div class="msg" id="msg"></div>
+  </form>
+
+  <div class="msg" id="done" style="display:none"></div>
+</div>
+<script>
+  const token = new URLSearchParams(location.search).get('token') || '';
+  if (!token) { document.getElementById('form').style.display='none'; document.getElementById('done').style.display='block'; document.getElementById('done').innerHTML='<span class="err">Lien invalide. <a href="/login">Retour à la connexion</a></span>'; }
+
+  async function doReset(e){
+    e.preventDefault();
+    const pw = document.getElementById('pw').value;
+    const pw2 = document.getElementById('pw2').value;
+    const msg = document.getElementById('msg');
+    if (pw !== pw2) { msg.innerHTML='<span class="err">Les deux mots de passe ne correspondent pas.</span>'; return false; }
+    msg.innerHTML='<span style="color:#5f6b76">Un instant…</span>';
+    try {
+      const r = await fetch('/api/reset',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token, password:pw})});
+      const d = await r.json();
+      if (d.ok) {
+        document.getElementById('form').style.display='none';
+        const done = document.getElementById('done');
+        done.style.display='block';
+        done.innerHTML='<span class="ok">Mot de passe mis à jour ! </span><a href="/login">Se connecter &rarr;</a>';
+      } else {
+        msg.innerHTML='<span class="err">'+(d.error||'Une erreur est survenue.')+'</span>';
+      }
+    } catch(err){ msg.innerHTML='<span class="err">Connexion impossible, réessayez.</span>'; }
+    return false;
+  }
+</script>
+</body>
+</html>

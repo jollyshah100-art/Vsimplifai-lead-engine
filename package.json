@@ -1,0 +1,13 @@
+{
+  "name": "vsimplifai-lead-engine",
+  "version": "1.0.0",
+  "private": true,
+  "description": "VsimplifAI — consent-first AI lead engine for real estate agents (post-Bloctel / loi 2025-594).",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
