@@ -3,18 +3,20 @@
     "id": "solo",
     "name": "MandIMMO Solo",
     "price": "29 €",
-    "unit": "/ mois (Tarif Fondateur)",
-    "audience": "Offre spéciale jusqu'au 30 sept. 2026 (puis 49 €/mois)",
+    "unit": "/ mois",
+    "audience": "Offre de lancement : 29 €/mois jusqu'au 30 sept. 2026 (puis 49 €/mois)",
     "features": [
+      "3 jours d'essai gratuit (sans engagement)",
+      "Tarif de lancement : 29 €/mois jusqu'au 30 sept. 2026 (puis 49 €/mois)",
       "🎁 Kit de prospection inclus (modèles flyers & réseaux)",
       "Page de capture et entonnoir d'estimation personnalisés",
       "QR Code Haute Définition pour flyers et panneaux",
-      "Tunnel de consentement préalable (double opt-in)",
+      "Tunnel de consentement préalable certifié (double opt-in)",
       "Registre de preuves horodaté exportable (format CSV)",
       "Leads exclusifs, prêts à appeler en direct",
-      "Sans engagement, résiliable à tout moment"
+      "Sans engagement, résiliable à tout moment en 1 clic"
     ],
-    "cta": "Commencer mon essai",
+    "cta": "Commencer mon essai (3 jours)",
     "highlight": true
   },
   {
