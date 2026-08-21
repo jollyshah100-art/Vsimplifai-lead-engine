@@ -51,7 +51,7 @@ const server = http.createServer(async (req, res) => {
   }
 
   // --- Admin dashboard (owner-only): signups + visitor stats ---
-  if (req.method === 'GET' && u.pathname === '/admin') {
+  if (req.method === 'GET' && (u.pathname === '/admin' || u.pathname === '/admin.html')) {
     if (!isAdmin(await currentAgent(req))) { res.writeHead(302, { Location: '/login' }); return res.end(); }
     return html(res, 200, fs.readFileSync(path.join(__dirname, 'admin.html'), 'utf8'));
   }
@@ -61,7 +61,7 @@ const server = http.createServer(async (req, res) => {
     const visits = await db.listVisits();
     return send(res, 200, { agents, visits });
   }
-  if (req.method === 'GET' && u.pathname === '/login') {
+  if (req.method === 'GET' && (u.pathname === '/login' || u.pathname === '/login.html')) {
     // After Stripe payment, the user returns here with ?session_id=... — activate the account
     // directly from the completed checkout session (reliable even if the webhook isn't set up).
     const sid = u.searchParams.get('session_id');
@@ -75,9 +75,25 @@ const server = http.createServer(async (req, res) => {
     }
     return html(res, 200, fs.readFileSync(path.join(__dirname, 'login.html'), 'utf8'));
   }
-  // Prospect-facing capture page (the public landing the QR/links point to)
-  if (req.method === 'GET' && u.pathname === '/capture') {
+  // Prospect-facing capture page (the public landing the QR/links point to, and preview demo)
+  if (req.method === 'GET' && (u.pathname === '/capture' || u.pathname === '/capture.html' || u.pathname === '/preview/funnel')) {
     return html(res, 200, fs.readFileSync(path.join(__dirname, 'capture.html'), 'utf8'));
+  }
+  // Legal, assurance & static pages
+  if (req.method === 'GET' && (u.pathname === '/cgv' || u.pathname === '/cgv.html')) {
+    return html(res, 200, fs.readFileSync(path.join(__dirname, 'cgv.html'), 'utf8'));
+  }
+  if (req.method === 'GET' && (u.pathname === '/mentions-legales' || u.pathname === '/mentions-legales.html')) {
+    return html(res, 200, fs.readFileSync(path.join(__dirname, 'mentions-legales.html'), 'utf8'));
+  }
+  if (req.method === 'GET' && (u.pathname === '/politique-confidentialite' || u.pathname === '/politique-confidentialite.html')) {
+    return html(res, 200, fs.readFileSync(path.join(__dirname, 'politique-confidentialite.html'), 'utf8'));
+  }
+  if (req.method === 'GET' && (u.pathname === '/assurance' || u.pathname === '/assurance.html')) {
+    return html(res, 200, fs.readFileSync(path.join(__dirname, 'assurance.html'), 'utf8'));
+  }
+  if (req.method === 'GET' && (u.pathname === '/leads' || u.pathname === '/leads.html')) {
+    return html(res, 200, fs.readFileSync(path.join(__dirname, 'leads.html'), 'utf8'));
   }
   // Unlisted document hosting (for the DREETS / déclaration d'activité) — public-by-link, specific files only
   const DOCS = { '/docs/deroule-pedagogique.pdf': 'deroule-pedagogique.pdf', '/docs/note-justificative.pdf': 'note-justificative.pdf' };

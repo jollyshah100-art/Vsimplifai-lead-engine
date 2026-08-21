@@ -56,8 +56,8 @@
     <div class="brand">MandIMMO<small>Moteur de leads consentis · VsimplifAI</small></div>
     <nav class="nav" id="nav">
       <button class="active" data-v="leads">Biens à prospecter</button>
-      <button data-v="guide">Guide pratique</button>
       <button data-v="account">Mon lien de capture</button>
+      <button data-v="guide">Guide & Stratégie 🎓</button>
       <button data-v="capture">Tester la capture</button>
       <button data-v="optin">Mes leads (consentis)</button>
       <button data-v="pricing">Tarifs</button>
@@ -85,6 +85,7 @@
         </div>
       </div>
 
+      <!-- French Guide -->
       <div id="guide-content-fr">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
           <div class="card" style="max-width:none">
@@ -140,6 +141,7 @@
         </div>
       </div>
 
+      <!-- English Guide -->
       <div id="guide-content-en" style="display:none">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
           <div class="card" style="max-width:none">
@@ -346,6 +348,23 @@
   async function confirmLead(id){
     await fetch('/api/confirm',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,intent:'seller'})});
     loadLeads();
+  }
+  function switchGuideLang(lang){
+    const fr = document.getElementById('guide-content-fr');
+    const en = document.getElementById('guide-content-en');
+    const btnFr = document.getElementById('btn-lang-fr');
+    const btnEn = document.getElementById('btn-lang-en');
+    if(lang === 'en'){
+      fr.style.display = 'none';
+      en.style.display = 'block';
+      btnEn.className = 'btn blue';
+      btnFr.className = 'btn ghost';
+    } else {
+      fr.style.display = 'block';
+      en.style.display = 'none';
+      btnFr.className = 'btn blue';
+      btnEn.className = 'btn ghost';
+    }
   }
   loadMe();
   loadProps();

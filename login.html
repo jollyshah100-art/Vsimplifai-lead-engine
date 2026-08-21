@@ -36,7 +36,7 @@
     <label>Mot de passe</label><input id="su-pw" type="password" required minlength="6">
     <div id="planBlock"><label>Formule</label>
     <select id="su-plan">
-      <option value="solo">MandIMMO — 14,90 € / mois (sans engagement)</option>
+      <option value="solo">MandIMMO Solo — 29 € / mois (au lieu de 49 €)</option>
     </select></div>
     <button class="btn" type="submit" id="su-btn">Créer mon compte</button>
     <div class="msg" id="su-free" style="display:none;color:#2c6b45"></div>
@@ -68,7 +68,7 @@
   if (qp.get('canceled')) { document.getElementById('status').innerHTML = '<span class="err">Paiement annulé. Votre compte n\'est pas activé.</span>'; }
   if (qp.get('pay')) { document.getElementById('status').innerHTML = '<span class="err">Votre abonnement n\'est pas finalisé. Terminez le paiement pour accéder à l\'appli.</span>'; tab('login'); }
   var invite = qp.get('invite');
-  fetch('/api/config').then(r=>r.json()).then(c=>{ var b=!!c.billing && !invite; document.getElementById('su-btn').textContent=b?'Démarrer l\'essai gratuit (14 jours)':'Créer mon compte (gratuit)'; var f=document.getElementById('su-free'); if(b){ f.style.display='block'; f.textContent='14 jours gratuits, puis 14,90 €/mois. Sans engagement.'; } else { document.getElementById('planBlock').style.display='none'; f.style.display='block'; f.textContent= invite ? 'Accès offert — aucune carte bancaire requise.' : 'Offre de lancement : accès gratuit, sans carte bancaire.'; } }).catch(function(){});
+  fetch('/api/config').then(r=>r.json()).then(c=>{ var b=!!c.billing && !invite; document.getElementById('su-btn').textContent=b?'Démarrer mon essai gratuit (3 jours)':'Créer mon compte (gratuit)'; var f=document.getElementById('su-free'); if(b){ f.style.display='block'; f.textContent='3 jours gratuits, puis 29 €/mois (au lieu de 49 €). Sans engagement.'; } else { document.getElementById('planBlock').style.display='none'; f.style.display='block'; f.textContent= invite ? 'Accès offert — aucune carte bancaire requise.' : 'Offre de lancement : accès gratuit, sans carte bancaire.'; } }).catch(function(){});
 
   function tab(t){
     document.getElementById('tab-signup').classList.toggle('active', t==='signup');
